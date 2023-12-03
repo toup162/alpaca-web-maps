@@ -4,12 +4,17 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 function App() {
 	return (
 		<div className="App">
-			<MapContainer center={[0,0]} zoom={3}>
-        <TileLayer
-          attribution='test'
-          url='../rift/{z}/{y}/{x}.jpg'
-        />
-      </MapContainer>
+			<MapContainer
+				center={[20,-20]}
+				zoom={3}
+				maxZoom={6}
+				minZoom={2}
+			>
+				<TileLayer
+					attribution='test'
+					url='../rift/{z}/{y}/{x}.jpg'
+				/>
+			</MapContainer>
 		</div>
 	);
 }
