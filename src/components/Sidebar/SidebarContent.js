@@ -3,7 +3,7 @@ import routes from '../../routes/sidebar'
 import { NavLink, Route } from 'react-router-dom'
 import * as Icons from '../../icons'
 import SidebarSubmenu from './SidebarSubmenu'
-import Logo63 from '../../assets/img/logo63.png'
+import Logo60 from '../../assets/img/logo60.png'
 
 function Icon({ icon, ...props }) {
     const Icon = Icons[icon]
@@ -12,16 +12,16 @@ function Icon({ icon, ...props }) {
 
 function SidebarContent() {
     return (
-        <div className="py-4 text-gray-500 dark:text-gray-400">
+        <div className="pb-4 text-gray-500 dark:text-gray-400">
             <div></div>
-            <span className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200 flex justify-start" href="#">
+            <div className="logo-container text-lg py-2 font-bold text-gray-800 dark:text-gray-200 flex justify-center" href="#">
                 <img
                     aria-hidden="true"
                     className=""
-                    src={Logo63}
+                    src={Logo60}
                     alt="Logo Image"
                 />
-            </span>
+            </div>
             <ul className="mt-6">
                 {routes.map((route) =>
                     route.routes ? (

@@ -54,3 +54,11 @@ div.react-switch-selector-option {
 .leaflet-control-attribution {
 	display: none;
 }
+
+.alpaca-sidebar {
+	z-index: 500;
+}
+
+.logo-container {
+	background: #1e2129;
+}
