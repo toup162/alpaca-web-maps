@@ -6,14 +6,18 @@
 		"@testing-library/jest-dom": "^5.17.0",
 		"@testing-library/react": "^13.4.0",
 		"@testing-library/user-event": "^13.5.0",
+		"@windmill/react-ui": "0.3.1",
 		"leaflet": "^1.9.4",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-leaflet": "^4.2.1",
+		"react-router-dom": "5.2.0",
 		"react-scripts": "5.0.1",
 		"web-vitals": "^2.1.4"
 	},
 	"scripts": {
+		"tailwind:dev": "tailwindcss build src/assets/css/tailwind.css -o src/assets/css/tailwind.output.css",
+		"tailwind:build": "cross-env NODE_ENV=production postcss src/assets/css/tailwind.css -o src/assets/css/tailwind.output.css",
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
@@ -31,6 +35,8 @@
 		"not op_mini all"
 	],
 	"devDependencies": {
-		"tailwindcss": "^3.3.5"
+		"postcss-cli": "7.1.1",
+		"tailwindcss": "1.4.6",
+		"cssnano": "4.1.10"
 	}
 }

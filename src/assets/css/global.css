@@ -1,0 +1,56 @@
+.fa, .fa-solid {
+    color: #fff;
+}
+
+.full-modal .fixed.z-40.flex.items-end {
+    align-items: center;
+}
+
+.basic-single {
+    color: #000;
+}
+
+
+.basic-single .select__menu {
+    z-index: 99;
+}
+
+.basic-single .select__menu-list {
+    max-height: 230px;
+    overflow-y: scroll;
+}
+
+.select__indicator.select__dropdown-indicator {
+    color: #262626;
+}
+
+label.react-switch-selector-option-label {
+    font-size: 13px;
+}
+
+div.react-switch-selector-wrapper,
+div.react-switch-selector-wrapper::before,
+div.react-switch-selector-option {
+    border-radius: 6px;
+}
+
+.dashboard-container {
+    width: 100%;
+}
+
+.mobile-logo {
+    font-family: 'Inter';
+    font-weight: bold;
+    color: #fff;
+}
+
+.leaflet-container {
+  flex: 1;
+  height: 100vh;
+	background-color: #111317;
+	overflow: unset!important;
+}
+
+.leaflet-control-attribution {
+	display: none;
+}
