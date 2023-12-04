@@ -56,9 +56,17 @@ div.react-switch-selector-option {
 }
 
 .alpaca-sidebar {
-	z-index: 500;
+	z-index: 600;
 }
 
 .logo-container {
 	background: #1e2129;
+}
+
+.fixed.z-40 {
+    z-index: 600!important;
+}
+
+.z-1000 {
+    z-index: 1000!important;
 }

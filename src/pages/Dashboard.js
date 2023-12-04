@@ -16,7 +16,6 @@ const Dashboard = () => {
 						attribution='test'
 						url='https://raw.githubusercontent.com/toup162/alpaca-web-maps/master/public/placeholder_map/{z}/{y}/{x}.png'
 						noWrap={true}
-
 					/>
 				</MapContainer>
 			</div>

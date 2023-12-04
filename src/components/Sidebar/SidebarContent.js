@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import routes from '../../routes/sidebar'
 import { NavLink, Route } from 'react-router-dom'
 import * as Icons from '../../icons'
 import SidebarSubmenu from './SidebarSubmenu'
 import Logo60 from '../../assets/img/logo60.png'
-
+import CreateMarkerModal from '../Modals/CreateMarkerModal/CreateMarkerModal';
 function Icon({ icon, ...props }) {
     const Icon = Icons[icon]
     return <Icon {...props} />
 }
 
 function SidebarContent() {
+    const [createMarkerModalOpen, setIsCreateMarkerModalOpen] = useState(false);
+
     return (
         <div className="pb-4 text-gray-500 dark:text-gray-400">
             <div></div>
@@ -47,6 +49,11 @@ function SidebarContent() {
                     )
                 )}
             </ul>
+            <button onClick={() => setIsCreateMarkerModalOpen(true)} >test</button>
+            <CreateMarkerModal
+                isOpen={createMarkerModalOpen}
+                setOpen={setIsCreateMarkerModalOpen}
+            />
         </div>
     )
 }

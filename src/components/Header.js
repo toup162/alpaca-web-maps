@@ -8,10 +8,10 @@ function Header() {
     const { toggleSidebar } = useContext(SidebarContext)
 
     return (
-        <header className="lg:hidden z-40 py-4 bg-white shadow-bottom dark:bg-gray-800">
+        <header className="lg:hidden z-1000 py-4 bg-white shadow-bottom dark:bg-gray-800">
             <div className="flex justify-between h-full px-6 mr-0 ml-0 text-purple-600 dark:text-purple-300">
                 
-                <div className="mobile-logo p-1">alpacatrain</div>
+                <div className="mobile-logo p-1">alpacamapper</div>
                 
                 {/* <!-- Mobile hamburger --> */}
                 <button
