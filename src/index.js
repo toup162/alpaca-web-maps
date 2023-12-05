@@ -7,6 +7,7 @@ import { SidebarProvider } from './context/SidebarContext'
 import ThemedSuspense from './components/ThemedSuspense'
 import { Windmill } from '@windmill/react-ui'
 import * as serviceWorker from './serviceWorker'
+import { UserLocalProvider } from './context/UserLocalContext'
 
 // if (process.env.NODE_ENV !== 'production') {
 //     const axe = require('react-axe')
@@ -14,14 +15,16 @@ import * as serviceWorker from './serviceWorker'
 // }
 
 ReactDOM.render(
+	<UserLocalProvider>
     <SidebarProvider>
         <Suspense fallback={<ThemedSuspense />}>
             <Windmill usePreferences>
                 <App />
             </Windmill>
         </Suspense>
-    </SidebarProvider>,
-    document.getElementById('root')
+    </SidebarProvider>
+	</UserLocalProvider>,
+	document.getElementById('root')
 )
 
 // If you want your app to work offline and load faster, you can change

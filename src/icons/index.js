@@ -27,11 +27,13 @@ import { ReactComponent as OutlinePersonIcon } from './outlinePerson.svg'
 import { ReactComponent as OutlineCogIcon } from './outlineCog.svg'
 import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg'
 import { ReactComponent as InfoIcon } from './info.svg'
-
+import { ReactComponent as EyeIcon} from './eye.svg';
+import { ReactComponent as XIcon} from './xmark.svg';
 export {
     ButtonsIcon,
     CardsIcon,
     ChartsIcon,
+		EyeIcon,
     FormsIcon,
     HomeIcon,
     ModalsIcon,
@@ -57,5 +59,6 @@ export {
     OutlinePersonIcon,
     OutlineCogIcon,
     OutlineLogoutIcon,
-    InfoIcon
+    InfoIcon,
+		XIcon,
 }

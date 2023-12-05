@@ -9,6 +9,7 @@ import ThemedSuspense from '../components/ThemedSuspense'
 import { SidebarContext } from '../context/SidebarContext'
 
 const Page404 = lazy(() => import('../pages/404'))
+const MapViewer = lazy(() => import('../pages/MapViewer'))
 
 function Layout() {
     const { isSidebarOpen, closeSidebar } = useContext(SidebarContext)
@@ -40,6 +41,7 @@ function Layout() {
                                     />
                                 ) : null
                             })}
+														<Route component={MapViewer} path={`/app/map/:mapId`} />
                             <Redirect exact from="/app" to="/app/dashboard" />
                             <Route component={Page404} />
                         </Switch>
