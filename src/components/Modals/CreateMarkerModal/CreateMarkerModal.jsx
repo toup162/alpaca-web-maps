@@ -30,8 +30,6 @@ const CreateMarkerModal = ({ isOpen, setOpen }) => {
                     <Label className="mt-4">
                         <div className="mb-1">Subway Line</div>
                     </Label>
-
-
                 </div>
             </ModalBody>
             <div className="mb-8 sm:mb-12">

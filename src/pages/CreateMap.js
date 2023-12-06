@@ -8,6 +8,7 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom'
 import { UserLocalContext } from '../context/UserLocalContext'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import { nanoid } from 'nanoid';
 
 
 const CreateMap = () => {
@@ -25,7 +26,11 @@ const CreateMap = () => {
 	}
 
 	const handleSave = () => {
-		addMap(formValues);
+		const newMap = {
+			...formValues,
+			mapId: nanoid()
+		};
+		addMap(newMap);
 		history.push('/app/dashboard');
 	}
 
