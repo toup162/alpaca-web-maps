@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { UserLocalContext } from '../context/UserLocalContext'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { nanoid } from 'nanoid';
+import moment from 'moment';
 
 
 const CreateMap = () => {
@@ -28,6 +29,8 @@ const CreateMap = () => {
 	const handleSave = () => {
 		const newMap = {
 			...formValues,
+			createdTs: moment(),
+			modifiedTs: moment(), 
 			mapId: nanoid()
 		};
 		addMap(newMap);
@@ -53,7 +56,7 @@ const CreateMap = () => {
 					<Label>
 						<span className='text-gray-200'>Tiles Root Directory URL</span>
 						<div className="relative">
-							<input
+							<Input
 								id='tileRootDirectoryUrl'
 								className="block w-full placeholder-gray-500 pl-25 mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
 								placeholder="URL"

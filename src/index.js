@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import './assets/css/tailwind.output.css'
 import './assets/css/global.css'
+import 'react-tippy/dist/tippy.css';
 import App from './App'
 import { SidebarProvider } from './context/SidebarContext'
 import ThemedSuspense from './components/ThemedSuspense'

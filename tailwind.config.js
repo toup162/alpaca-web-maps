@@ -13,4 +13,7 @@ module.exports = windmill({
 			},
 		},
 	},
+	variants: {
+		margin: ['responsive']
+	}
 })

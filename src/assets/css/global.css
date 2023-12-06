@@ -34,7 +34,7 @@ div.react-switch-selector-option {
     border-radius: 6px;
 }
 
-.dashboard-container {
+.main-container {
     width: 100%;
 }
 
@@ -90,7 +90,7 @@ div.react-switch-selector-option {
 	opacity: 0.1;
 }
 
-.dashboard-container.container {
+.main-container.container {
 	max-width: unset;
 }
 
@@ -116,4 +116,71 @@ div.react-switch-selector-option {
 .welcome-container .flex svg {
 	position: relative;
 	top: -5px;
+}
+
+.map-card {
+	width: 256px;
+	height: 256px;
+	background-color: transparent!important;
+	background-repeat: no-repeat, no-repeat;
+  background-position: top left, top 0px left 256px;
+	/*box-shadow: inset 0 0 0 256px rgba(0,0,0,0.6);*/
+	border: 1px solid #242424;
+}
+
+.map-card.populated > div {
+	padding: 0!important;
+}
+
+.map-card:not(.populated):hover {
+	border: 1px solid #464646;
+}
+
+.map-card-name {
+	background: #000000c9;
+}
+
+.map-card-info {
+	background: #0000009e;
+	opacity: 0;
+	transition: 0.3s;
+}
+
+.map-card.populated:hover .map-card-info {
+	opacity: 1;
+}
+
+.map-card-name > div > div {
+	max-width: 185px;
+	overflow: hidden;
+}
+
+.ellipsis-button svg {
+	height: 1.5rem;
+	width: 1.5rem;
+}
+
+.tippy-tooltip {
+  box-shadow: 0px 3px 9px 0px #000;
+	padding: 0px!important;
+	min-width: 200px;
+}
+
+.options-tooltip-content-container {
+	text-align: left;
+}
+
+.tooltip-option {
+	cursor: pointer;
+	padding: 0.5rem;
+}
+
+.tooltip-option:hover {
+	background: #484848;
+	transition: 150ms ease-in-out;
+	
+}
+
+.tooltip-option:not(:first-child) {
+	border-top: 1px solid #464646;
 }

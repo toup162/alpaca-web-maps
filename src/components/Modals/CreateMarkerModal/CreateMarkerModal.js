@@ -1,13 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Label } from '@windmill/react-ui'
-import Select from 'react-select';
 import './CreateMarkerModal.css';
 
 const CreateMarkerModal = ({ isOpen, setOpen }) => {
-    const [selectedLine, setSelectedLine] = useState(null);
-    const [selectedTrain, setSelectedTrain] = useState(null);
-    const [selectedStation, setSelectedStation] = useState(null);
-
     const onClose = () => {
         setOpen(false);
     }
