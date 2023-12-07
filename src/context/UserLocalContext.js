@@ -40,6 +40,17 @@ export const UserLocalProvider = ({ children }) => {
 		setUserLocal(clonedUserLocal);
 	}
 
+	const updateMap = map => {
+		const clonedUserLocal = userLocal ? _.cloneDeep(userLocal) : { };
+		if (clonedUserLocal?.maps) {
+			let existingMapDetails = clonedUserLocal.maps.find(m => m.mapId === map.mapId);
+			Object.keys(map).forEach(key => {
+				existingMapDetails[key] = map[key];
+			})
+			setUserLocal(clonedUserLocal);
+		}
+	}
+
 	const deleteMap = mapId => {
 		const clonedUserLocal = userLocal ? _.cloneDeep(userLocal) : { };
 		clonedUserLocal.maps = userLocal.maps.filter(m => m.mapId !== mapId);
@@ -52,7 +63,8 @@ export const UserLocalProvider = ({ children }) => {
 					initFromLocalStorage,
 					saveToLocalStorage,
 					addMap,
-					deleteMap
+					deleteMap,
+					updateMap
 			}),
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 			[userLocal]

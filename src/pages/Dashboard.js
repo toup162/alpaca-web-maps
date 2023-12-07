@@ -29,10 +29,10 @@ const Dashboard = () => {
 				</HeroCopyText>
 				<div className="flex items-center mt-8">
 					<Button className="text-lg hidden sm:block" tag={Link} to='/app/create-map' size="larger">Get Started</Button>
-					<Link className="text-lg ml-6 hidden sm:block text-gray-300 hover:text-gray-500" to='/app/create-map' size="larger" layout='link'>Learn more</Link>
+					<Link className="text-lg ml-6 hidden sm:block text-gray-300 hover:text-gray-500" to='/app/about' size="larger" layout='link'>Learn more</Link>
 					<div className='block w-full sm:hidden'>
 						<Button className="text-lg block w-full" tag={Link} to='/app/create-map' size="larger">Get Started</Button>
-						<Button className="text-lg block w-full mt-4" layout='link' tag={Link} to='/app/create-map' size="larger">Learn more</Button>
+						<Button className="text-lg block w-full mt-4" layout='link' tag={Link} to='/app/about' size="larger">Learn more</Button>
 					</div>
 				</div>
 			</div>
@@ -69,7 +69,7 @@ const Dashboard = () => {
 				
 				<SectionTitle>Connections</SectionTitle>
 				<div className="grid gap-6 mb-8 md:grid-cols-2 mb-10">
-					<div onClick={() => setConfirmDeleteMapModalOpen('123')}>
+					<div>
 						None
 					</div>
 				</div>

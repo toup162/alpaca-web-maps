@@ -1,26 +1,39 @@
 import { Button, Card, CardBody } from '@windmill/react-ui';
-import React from 'react';
+import React, { useState } from 'react';
 import { ReactFitty } from 'react-fitty';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
-import { EllipsisIcon, PencilMiniIcon, TrashMiniIcon } from '../icons';
+import { EllipsisIcon, CogIcon, TrashMiniIcon } from '../icons';
 import moment from 'moment';
 import { Tooltip } from 'react-tippy';
 
 const MapCard = ({mapDetails, setConfirmDeleteMapModalOpen}) => {
 	const history = useHistory();
+	const [optionsTooltipIsOpen, setOptionsTooltipIsOpen] = useState(false);
+
 	const handleMapNameClick = e => {
 		history.push(`/app/map/${mapDetails.mapId}`);
 		e.preventDefault();
 		e.stopPropagation();
 	}
 
+	const handleEditMapClick = e => {
+		history.push(`/app/edit-map/${mapDetails.mapId}`);
+		e.preventDefault();
+		e.stopPropagation();
+	}
+
+	const handleDeleteMapClick = () => {
+		setConfirmDeleteMapModalOpen(mapDetails);
+		setOptionsTooltipIsOpen(false);
+	}
+
 	const optionsTooltipContent = (
 		<div className='options-tooltip-content-container'>
-			<div className="tooltip-option flex text-neutral-200">
-				<PencilMiniIcon />
-				<div className='ml-2'>Edit</div>
+			<div className="tooltip-option flex text-neutral-200" onClick={handleEditMapClick}>
+				<CogIcon />
+				<div className='ml-2'>Edit Metadata</div>
 			</div>
-			<div className="tooltip-option flex text-red-400" onClick={() => setConfirmDeleteMapModalOpen(mapDetails)}>
+			<div className="tooltip-option flex text-red-400" onClick={handleDeleteMapClick}>
 				<TrashMiniIcon />
 				<div className='ml-2'>Delete</div>
 			</div>
@@ -42,12 +55,20 @@ const MapCard = ({mapDetails, setConfirmDeleteMapModalOpen}) => {
 						<div className="pt-2">
 						<Tooltip
 							html={optionsTooltipContent}
-							position="bottom-start"
+							position="bottom-end"
 							trigger="click"
 							interactive
 							animation='perspective'
+							open={optionsTooltipIsOpen}
+							onRequestClose={() => setOptionsTooltipIsOpen(false)}
 						>
-							<Button icon={EllipsisIcon} layout='link' className='bg-transparent text-lg ellipsis-button' style={{padding: '4px', marginTop: '2px'}}></Button>
+							<Button
+								icon={EllipsisIcon}
+								layout='link'
+								className='bg-transparent text-lg ellipsis-button'
+								style={{padding: '4px', marginTop: '2px'}}
+								onClick={() => setOptionsTooltipIsOpen(true)}
+							></Button>
 						</Tooltip>
 						</div>
 					</div>

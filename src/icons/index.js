@@ -33,6 +33,8 @@ import { ReactComponent as EllipsisIcon} from './ellipsis.svg';
 import { ReactComponent as PlusIcon} from './plus.svg';
 import { ReactComponent as PencilMiniIcon} from './pencilmini.svg';
 import { ReactComponent as TrashMiniIcon} from './trashmini.svg';
+import { ReactComponent as CogIcon} from './cog.svg';
+import { ReactComponent as LinkIcon} from './link.svg';
 
 export {
 	ButtonsIcon,
@@ -70,4 +72,6 @@ export {
 	PlusIcon,
 	PencilMiniIcon,
 	TrashMiniIcon,
+	CogIcon,
+	LinkIcon,
 }

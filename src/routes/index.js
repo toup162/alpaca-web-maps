@@ -3,7 +3,6 @@ import { lazy } from 'react'
 // use lazy for better code splitting, a.k.a. load faster
 const Dashboard = lazy(() => import('../pages/Dashboard'))
 const Page404 = lazy(() => import('../pages/404'))
-const CreateMap = lazy(() => import('../pages/CreateMap'))
 
 /**
  * ⚠ These are internal routes!
@@ -23,10 +22,6 @@ const routes = [
     {
         path: '/404',
         component: Page404,
-    },
-    {
-        path: '/create-map',
-        component: CreateMap,
     },
 ]
 

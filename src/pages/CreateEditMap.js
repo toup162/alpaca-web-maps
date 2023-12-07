@@ -7,17 +7,34 @@ import _ from 'lodash';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom'
 import { UserLocalContext } from '../context/UserLocalContext'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom/cjs/react-router-dom';
 import { nanoid } from 'nanoid';
 import moment from 'moment';
+import toast from 'react-hot-toast';
 
+const CreateEditMap = () => {
+	const location = useLocation();
+	const { mapId } = useParams();
+	const editingExistingMap = !!location?.pathname?.includes('/edit-map') && mapId;
+	const { addMap, updateMap, userLocal } = useContext(UserLocalContext);
+	let existingMap;
 
-const CreateMap = () => {
-	const [formValues, setFormValues] = useState({ });
+	if (userLocal?.maps && editingExistingMap) {
+		existingMap = userLocal.maps?.find(_map => _map.mapId === mapId)
+	}
+
+	const [formValues, setFormValues] = useState((editingExistingMap && existingMap)
+		? existingMap
+		: {
+			mapName: '',
+			tileRootDirectoryUrl: '',
+			mapAttribution: '',
+		}
+	);
 	const [showPreview, setShowPreview] = useState(false);
-	const { addMap } = useContext(UserLocalContext);
+	
 	let history = useHistory();
-
+	
 	useEffect(() => setShowPreview(false), [formValues]);
 
 	const handleInputChange = (e, inputId) => {
@@ -26,7 +43,7 @@ const CreateMap = () => {
 		setFormValues(newFormValues);
 	}
 
-	const handleSave = () => {
+	const handleCreate = () => {
 		const newMap = {
 			...formValues,
 			createdTs: moment(),
@@ -34,13 +51,28 @@ const CreateMap = () => {
 			mapId: nanoid()
 		};
 		addMap(newMap);
+		toast.success(`Created '${newMap.mapName}'`);
+		history.push('/app/dashboard');
+	}
+
+	const handleSaveEdit = () => {
+		const newMap = {
+			...formValues,
+			modifiedTs: moment(), 
+		};
+		updateMap(newMap);
+		toast.success(`Updated '${newMap.mapName}'`);
 		history.push('/app/dashboard');
 	}
 
 	return (
 		<div className="create-map-container px-6 mx-auto">
-			<PageTitle>Create a Map</PageTitle>
-
+			<PageTitle>
+				{existingMap
+					? <>Edit <i>{existingMap.mapName}</i></>
+					: <>Create a Map</>
+				}
+			</PageTitle>
 			<div className="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
 				<Label>
 					<span className='text-gray-200'>Map Name</span>
@@ -49,6 +81,7 @@ const CreateMap = () => {
 						className="mt-1 placeholder-gray-500"
 						placeholder="Name"
 						onChange={e => handleInputChange(e, 'mapName')}
+						value={formValues.mapName}
 					/>
 				</Label>
 				
@@ -61,6 +94,7 @@ const CreateMap = () => {
 								className="block w-full placeholder-gray-500 pl-25 mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
 								placeholder="URL"
 								onChange={e => handleInputChange(e, 'tileRootDirectoryUrl')}
+								value={formValues.tileRootDirectoryUrl}
 							/>
 							<Button
 								style={{background: '#43485b'}}
@@ -84,6 +118,7 @@ const CreateMap = () => {
 							className="mt-1 placeholder-gray-500"
 							placeholder="Attribution"
 							onChange={e => handleInputChange(e, 'mapAttribution')}
+							value={formValues.mapAttribution}
 						/>
 					</Label>
 					<span className="text-xs text-gray-400">e.g. <i>© Microdeal, Inc. All rights reserved. 'Goldrunner II' is a trademark of Microdeal, Inc. </i></span>
@@ -93,9 +128,9 @@ const CreateMap = () => {
 					<div className='flex'>
 						<Button
 							disabled={!formValues?.mapName || !formValues?.tileRootDirectoryUrl}
-							onClick={handleSave}
+							onClick={existingMap ? handleSaveEdit : handleCreate}
 						>
-							Create
+							{existingMap ? 'Save' : 'Create'}
 						</Button>
 						<Button className='ml-2' layout='link' tag={Link} to='/app/dashboard'>Cancel</Button>
 					</div>
@@ -117,7 +152,7 @@ const CreateMap = () => {
 				
 				<MapContainer
 					center={[60,-20]}
-					zoom={2}
+					zoom={3}
 					maxZoom={6}
 					minZoom={2}
 					className='preview-map'
@@ -134,4 +169,4 @@ const CreateMap = () => {
 	)
 }
 
-export default CreateMap
+export default CreateEditMap;
