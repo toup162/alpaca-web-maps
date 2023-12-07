@@ -15,7 +15,7 @@ const Dashboard = () => {
 	const { userLocal } = useContext(UserLocalContext);
 	const [confirmDeleteMapModalOpen, setConfirmDeleteMapModalOpen] = useState(null);
 	const history = useHistory();
-	
+
 	let dashboardContent = <div />;
 
 	if (!userLocal || userLocal.maps === null) {

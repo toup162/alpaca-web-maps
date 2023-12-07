@@ -5,20 +5,32 @@ export const UserLocalContext = React.createContext()
 
 export const UserLocalProvider = ({ children }) => {
 	
-	/*const [userLocal, setUserLocal] = useState({
-		maps: [{
-			mapName: "Test M",
-			tileRootDirectoryUrl: "https://raw.githubusercontent.com/toup162/alpaca-web-maps/master/public/placeholder_map",
-			mapAttribution: "111",
-			createdTs: "2023-12-06T20:11:19.379Z",
-			modifiedTs: "2023-12-06T20:11:19.379Z",
-			mapId: "kKsMU5E0do8_vkbI0WEP-"
-		}]
-	})*/
+	const [userLocal, setUserLocal] = useState({
+    maps: [
+			{
+				mapName: "Map Name",
+				tileRootDirectoryUrl: "https://raw.githubusercontent.com/toup162/alpaca-web-maps/master/public/placeholder_map",
+				mapAttribution: "111",
+				createdTs: "2023-12-07T06:15:52.510Z",
+				modifiedTs: "2023-12-07T06:22:45.476Z",
+				mapId: "8zwl-kEi1GqFZHnIcZYm9"
+			},
+			{
+				mapName: "Test OSM",
+				tileRootDirectoryUrl: "https://tile.osm.org",
+				mapAttribution: "a",
+				createdTs: "2023-12-07T07:03:35.249Z",
+				modifiedTs: "2023-12-07T07:03:35.249Z",
+				mapId: "QnfGogwN0jKYk9EeEaGsL"
+			}
+    ]
+	})
 
+/*
 	const [userLocal, setUserLocal] = useState({
 		maps: null,
 	})
+*/
 
 	const initFromLocalStorage = () => {
 		const stringifiedUserLocal = localStorage.getItem('ALPACA_WEB_MAPS_USER_LOCAL');
