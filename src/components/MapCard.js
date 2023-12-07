@@ -1,17 +1,13 @@
 import { Button, Card, CardBody } from '@windmill/react-ui';
-import React, { useContext } from 'react';
+import React from 'react';
 import { ReactFitty } from 'react-fitty';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { EllipsisIcon, PencilMiniIcon, TrashMiniIcon } from '../icons';
 import moment from 'moment';
 import { Tooltip } from 'react-tippy';
-import { UserLocalContext } from '../context/UserLocalContext'
 
 const MapCard = ({mapDetails, setConfirmDeleteMapModalOpen}) => {
-
 	const history = useHistory();
-	const { deleteMap } = useContext(UserLocalContext);
-
 	const handleMapNameClick = e => {
 		history.push(`/app/map/${mapDetails.mapId}`);
 		e.preventDefault();
