@@ -35,6 +35,7 @@ import { ReactComponent as PencilMiniIcon} from './pencilmini.svg';
 import { ReactComponent as TrashMiniIcon} from './trashmini.svg';
 import { ReactComponent as CogIcon} from './cog.svg';
 import { ReactComponent as LinkIcon} from './link.svg';
+import { ReactComponent as AdjustmentsHorizontal} from './adjustmentshorizontal.svg';
 
 export {
 	ButtonsIcon,
@@ -74,4 +75,5 @@ export {
 	TrashMiniIcon,
 	CogIcon,
 	LinkIcon,
+	AdjustmentsHorizontal,
 }
