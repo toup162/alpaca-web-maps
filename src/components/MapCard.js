@@ -7,7 +7,7 @@ import moment from 'moment';
 import { Tooltip } from 'react-tippy';
 import { UserLocalContext } from '../context/UserLocalContext'
 
-const MapCard = ({mapDetails}) => {
+const MapCard = ({mapDetails, setConfirmDeleteMapModalOpen}) => {
 
 	const history = useHistory();
 	const { deleteMap } = useContext(UserLocalContext);
@@ -24,7 +24,7 @@ const MapCard = ({mapDetails}) => {
 				<PencilMiniIcon />
 				<div className='ml-2'>Edit</div>
 			</div>
-			<div className="tooltip-option flex text-red-400" onClick={() => deleteMap(mapDetails.mapId)}>
+			<div className="tooltip-option flex text-red-400" onClick={() => setConfirmDeleteMapModalOpen(mapDetails)}>
 				<TrashMiniIcon />
 				<div className='ml-2'>Delete</div>
 			</div>

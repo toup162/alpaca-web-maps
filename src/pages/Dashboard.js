@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { UserLocalContext } from '../context/UserLocalContext'
 import PageTitle from '../components/Typography/PageTitle';
 import HeroTitle from '../components/Typography/HeroTitle';
@@ -9,12 +9,13 @@ import SectionTitle from '../components/Typography/SectionTitle';
 import { PlusIcon } from '../icons';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import MapCard from '../components/MapCard';
+import ConfirmDeleteMapModal from '../components/Modals/ ConfirmDeleteMapModal/ConfirmDeleteMapModal';
 
 const Dashboard = () => {
 	const { userLocal } = useContext(UserLocalContext);
+	const [confirmDeleteMapModalOpen, setConfirmDeleteMapModalOpen] = useState(null);
 	const history = useHistory();
-	console.log(userLocal);
-
+	
 	let dashboardContent = <div />;
 
 	if (!userLocal || userLocal.maps === null) {
@@ -43,7 +44,11 @@ const Dashboard = () => {
 				<SectionTitle>Maps</SectionTitle>
 				<div className="mb-8 mb-10 flex flex-wrap">
 					{userLocal.maps.length > 0 ? userLocal.maps.map(mapDetails => {
-						return <MapCard key={mapDetails.mapId} mapDetails={mapDetails} />
+						return <MapCard
+							key={mapDetails.mapId}
+							mapDetails={mapDetails}
+							setConfirmDeleteMapModalOpen={setConfirmDeleteMapModalOpen}
+						/>
 					}) : <div />}
 					<Card className='map-card mr-6 hover:outline'>
 						<div
@@ -64,10 +69,14 @@ const Dashboard = () => {
 				
 				<SectionTitle>Connections</SectionTitle>
 				<div className="grid gap-6 mb-8 md:grid-cols-2 mb-10">
-					<div>
+					<div onClick={() => setConfirmDeleteMapModalOpen('123')}>
 						None
 					</div>
 				</div>
+				<ConfirmDeleteMapModal
+					confirmDeleteMapModalOpen={confirmDeleteMapModalOpen}
+					setOpen={setConfirmDeleteMapModalOpen}
+				/>
 			</div>
 		);
 	}
