@@ -65,9 +65,6 @@ const MapViewer = () => {
 	}
 
 	const onConfirmCreateMarker = newMarker => {
-
-		console.log(newMarker.icon);
-
 		/* Delete the placeholder marker, add the new marker */
 		setMarkers([
 			...markers.filter(marker => marker.id !== MAP_ID_PLACEHOLDER),
@@ -100,7 +97,6 @@ const MapViewer = () => {
 						noWrap={true}
 					/>
 						{markers.map(marker => {
-							console.log(marker);
 							return (
 								<Marker
 									key={marker.id}

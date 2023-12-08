@@ -193,6 +193,26 @@ div.react-switch-selector-option {
 	border: 1px solid rgba(76, 79, 82, 1);
 	color: #fff;
 }
-.icon-select-container .icon-select__single-value {
-	color: rgba(213, 214, 215, 1)
+.icon-select-container .icon-select__single-value,
+.icon-select__input,
+.icon-select__input-container {
+	color: rgba(213, 214, 215, 1)!important;
+}
+
+.peer:checked ~ .peer-checked\:text-white {
+	color: rgba(255,255,255,1);
+}
+
+.peer:checked ~ .peer-checked\:font-bold {
+	font-weight: 700;
+}
+
+.peer:checked ~ .peer-checked\:bg-blue-500 {
+	background-color: rgb(126, 58, 242);
+	border-radius: 0.25rem;
+	transition: 0.3s;
+}
+
+.modal-wrapper {
+	z-index: 1001;
 }
