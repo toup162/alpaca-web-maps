@@ -279,7 +279,7 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 													style={{height: '48px'}}
 												/>
 												<div>
-													<div>Chonk</div>
+													<div>Large</div>
 													<div>48x48 px</div>
 												</div>
 											</div>
@@ -323,7 +323,7 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 						</div>
 					</ModalFooter>
 				</div>
-				
+
 			</Modal>
 		</div>
     )
