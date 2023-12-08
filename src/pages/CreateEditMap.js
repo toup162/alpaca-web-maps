@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import PageTitle from '../components/Typography/PageTitle';
 import SectionTitle from '../components/Typography/SectionTitle';
 import { Input, Button, Label } from '@windmill/react-ui'
-import { AdjustmentsHorizontal, DropdownIcon, EyeIcon, XIcon } from '../icons'
+import { AdjustmentsHorizontalIcon, DropdownIcon, EyeIcon, XIcon } from '../icons'
 import _ from 'lodash';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom'
@@ -17,6 +17,7 @@ const DEFAULT_CENTER_Y_COORD = '-20';
 const DEFAULT_INITIAL_ZOOM = '2';
 const DEFAULT_MIN_ZOOM = '2';
 const DEFAULT_MAX_ZOOM = '6';
+const DEFAULT_TILES_DIRECTORY_SCHEMA = '/{z}/{x}/{y}.png';
 
 const CreateEditMap = () => {
 	const location = useLocation();
@@ -38,6 +39,7 @@ const CreateEditMap = () => {
 			initialZoom: '2',
 			minZoom: '2',
 			maxZoom: '6',
+			tileDirectorySchema: '/{z}/{x}/{y}.png'
 		}
 	);
 	const [showPreview, setShowPreview] = useState(false);
@@ -50,6 +52,7 @@ const CreateEditMap = () => {
 			|| existingMap.initialZoom !== DEFAULT_INITIAL_ZOOM
 			|| existingMap.minZoom !== DEFAULT_MIN_ZOOM
 			|| existingMap.maxZoom !== DEFAULT_MAX_ZOOM
+			|| existingMap.tileDirectorySchema !== DEFAULT_TILES_DIRECTORY_SCHEMA
 		))
 	}
 	
@@ -87,6 +90,18 @@ const CreateEditMap = () => {
 		history.push('/app/dashboard');
 	}
 
+	const formIsInvalid = () => {
+		return formValues && (!formValues?.mapName
+			|| !formValues.tileRootDirectoryUrl
+			|| !formValues.centerXCoord
+			|| !formValues.centerYCoord
+			|| !formValues.initialZoom
+			|| !formValues.minZoom
+			|| !formValues.maxZoom
+			|| !formValues.tileDirectorySchema
+		)
+	}
+	
 	return (
 		<div className="create-map-container px-6 mx-auto">
 			<PageTitle>
@@ -155,7 +170,7 @@ const CreateEditMap = () => {
 						</div>
 						<div className='flex-0'>
 							<Button layout="link" className='whitespace-nowrap mx-2' onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}>
-								<AdjustmentsHorizontal className='h-6 w-6 mr-1' />
+								<AdjustmentsHorizontalIcon className='h-6 w-6 mr-1' />
 								<span className='mr-1'>Advanced Options</span>
 								<DropdownIcon className={`h-5 w-5 ${showAdvancedOptions ? 'transform -rotate-180 pl-1' : 'pl-0'}`} />
 							</Button>
@@ -167,6 +182,21 @@ const CreateEditMap = () => {
 
 					{showAdvancedOptions && (
 						<div className='pb-6'>
+
+							<div className="mt-4">
+								<Label>
+									<span className='text-gray-200'>Tiles Directory Schema</span>
+									<Input
+										id='tileDirectorySchema'
+										className="mt-1 placeholder-gray-500"
+										placeholder=""
+										onChange={e => handleInputChange(e, 'tileDirectorySchema')}
+										value={formValues.tileDirectorySchema}
+									/>
+								</Label>
+								<span className="text-xs text-gray-400">e.g. <i>{'/{z}/{y}/{x}.png'}</i></span>
+							</div>
+
 							<div className="mt-2 flex flex-wrap">
 								<div className='pr-2 mt-2'>
 									<Label>
@@ -246,7 +276,7 @@ const CreateEditMap = () => {
 					<div className='flex justify-end mt-4 mb-3'>
 						<div className='flex'>
 							<Button
-								disabled={!formValues?.mapName || !formValues?.tileRootDirectoryUrl}
+								disabled={formIsInvalid()}
 								onClick={existingMap ? handleSaveEdit : handleCreate}
 							>
 								{existingMap ? 'Save' : 'Create'}

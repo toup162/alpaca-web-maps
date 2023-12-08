@@ -19,6 +19,7 @@ export const UserLocalProvider = ({ children }) => {
 				initialZoom: '2',
 				minZoom: '2',
 				maxZoom: '6',
+				tileDirectorySchema: '/{z}/{y}/{x}.png'
 			},
 			{
 				mapName: "Test OSM",
@@ -27,11 +28,12 @@ export const UserLocalProvider = ({ children }) => {
 				createdTs: "2023-12-07T07:03:35.249Z",
 				modifiedTs: "2023-12-07T07:03:35.249Z",
 				mapId: "QnfGogwN0jKYk9EeEaGsL",
-				centerXCoord: '60',
-				centerYCoord: '-20',
-				initialZoom: '2',
+				centerXCoord: '37.56',
+				centerYCoord: '-95.16',
+				initialZoom: '5',
 				minZoom: '2',
-				maxZoom: '6',
+				maxZoom: '13',
+				tileDirectorySchema: '/{z}/{x}/{y}.png'
 			}
     ]
 	})

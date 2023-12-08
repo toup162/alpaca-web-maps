@@ -45,7 +45,7 @@ const MapCard = ({mapDetails, setConfirmDeleteMapModalOpen}) => {
 			backgroundImage: `url(${mapDetails.tileRootDirectoryUrl}/1/0/0.png)`
 		}}>
 			<CardBody className='h-full'>
-				<div className='flex flex-col h-full justify-between'>
+				<div className='flex flex-col h-full'>
 					<div className="mb-2 font-semibold text-gray-600 dark:text-gray-300 map-card-name flex justify-between pl-4 pr-2 pb-2">
 						<div className='pt-4 pr-2 underline' title={mapDetails.mapName}>
 							<ReactFitty minSize={12} maxSize={32} wrapText={true} className='underline cursor-pointer' onClick={handleMapNameClick}>
@@ -72,13 +72,15 @@ const MapCard = ({mapDetails, setConfirmDeleteMapModalOpen}) => {
 						</Tooltip>
 						</div>
 					</div>
-					<div className='text-left text-sm p-4 map-card-info'>
-						<p className="text-gray-600 dark:text-gray-400">
-							<b>Created</b>: <span title={moment(mapDetails.createdTs).format()}>{moment(mapDetails.createdTs).format('YYYY-MM-DD')}</span><br />
-							{mapDetails.modifiedTs && <>
-								<b>Modified</b>: <span title={moment(mapDetails.modifiedTs).format()}>{moment(mapDetails.modifiedTs).fromNow()}</span>
-							</>}
-						</p>
+					<div onClick={handleMapNameClick} className='h-full flex flex-col justify-end cursor-pointer'>
+						<div className='text-left text-sm p-4 map-card-info'>
+							<p className="text-gray-600 dark:text-gray-400">
+								<b>Created</b>: <span title={moment(mapDetails.createdTs).format()}>{moment(mapDetails.createdTs).format('YYYY-MM-DD')}</span><br />
+								{mapDetails.modifiedTs && <>
+									<b>Modified</b>: <span title={moment(mapDetails.modifiedTs).format()}>{moment(mapDetails.modifiedTs).fromNow()}</span>
+								</>}
+							</p>
+						</div>
 					</div>
 				</div>
 			</CardBody>

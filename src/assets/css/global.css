@@ -185,3 +185,14 @@ div.react-switch-selector-option {
 .tooltip-option:not(:first-child) {
 	border-top: 1px solid #464646;
 }
+
+.icon-select-container .icon-select__control {
+	--bg-opacity: 1;
+  background-color: #707275;
+  background-color: rgba(36, 38, 45, 1);
+	border: 1px solid rgba(76, 79, 82, 1);
+	color: #fff;
+}
+.icon-select-container .icon-select__single-value {
+	color: rgba(213, 214, 215, 1)
+}

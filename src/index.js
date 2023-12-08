@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client';
 import './assets/css/tailwind.output.css'
 import './assets/css/global.css'
 import 'react-tippy/dist/tippy.css';
@@ -14,9 +14,9 @@ import { UserLocalProvider } from './context/UserLocalContext'
 //     const axe = require('react-axe')
 //     axe(React, ReactDOM, 1000)
 // }
-
-ReactDOM.render(
-	<UserLocalProvider>
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <UserLocalProvider>
     <SidebarProvider>
         <Suspense fallback={<ThemedSuspense />}>
             <Windmill usePreferences>
@@ -24,9 +24,8 @@ ReactDOM.render(
             </Windmill>
         </Suspense>
     </SidebarProvider>
-	</UserLocalProvider>,
-	document.getElementById('root')
-)
+	</UserLocalProvider>
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
