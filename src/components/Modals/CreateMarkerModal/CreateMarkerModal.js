@@ -10,15 +10,15 @@ const options = [
 	{
 		value: 'marker',
 		iconObject: new Icon ({
-			iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-			iconSize: [25,41],
-			iconAnchor: [25/2,41],
+			iconUrl: 'https://img.icons8.com/?size=50&id=Sk4BAluINF9y&format=png',
+			iconSize: [50,50],
+			iconAnchor: [50/2,50],
 			popupAnchor: [0, 0] 
 		}),
 		label: (
 			<div className='flex items-center'>
 				<img
-					src='https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png'
+					src='https://img.icons8.com/?size=50&id=Sk4BAluINF9y&format=png'
 					alt='marker'
 					className='ml-1 mr-3 h-6'
 				/>
@@ -29,15 +29,15 @@ const options = [
   {
 		value: 'home',
 		iconObject: new Icon ({
-			iconUrl: 'https://img.icons8.com/?size=50&id=72&format=png',
-			iconSize: [35,35],
-			iconAnchor: [35/3,35/2],
+			iconUrl: 'https://img.icons8.com/?size=50&id=euc8ZKJJqR5v&format=png',
+			iconSize: [50,50],
+			iconAnchor: [25,25],
 			popupAnchor: [0, 0] 
 		}),
 		label: (
 			<div className='flex items-center'>
 				<img
-					src='https://img.icons8.com/?size=50&id=72&format=png'
+					src='https://img.icons8.com/?size=50&id=euc8ZKJJqR5v&format=png'
 					alt='home'
 					className='mr-2 h-6'
 				/>
@@ -48,15 +48,15 @@ const options = [
   {
 		value: 'portal',
 		iconObject: new Icon ({
-			iconUrl: 'https://img.icons8.com/?size=50&id=wNFJRNiaDkI4&format=png',
-			iconSize: [35,35],
-			iconAnchor: [35/3,35/2],
+			iconUrl: 'https://img.icons8.com/?size=50&id=3QvhGTuExqvB&format=png',
+			iconSize: [50,50],
+			iconAnchor: [25,25],
 			popupAnchor: [0, 0] 
 		}),
 		label: (
 			<div className='flex items-center'>
 				<img
-					src='https://img.icons8.com/?size=50&id=wNFJRNiaDkI4&format=png'
+					src='https://img.icons8.com/?size=50&id=3QvhGTuExqvB&format=png'
 					alt='portal'
 					className='mr-2 h-6'
 				/>
@@ -67,15 +67,15 @@ const options = [
   {
 		value: 'door',
 		iconObject: new Icon ({
-			iconUrl: 'https://img.icons8.com/?size=50&id=8075&format=png',
-			iconSize: [35,35],
-			iconAnchor: [35/3,35/2],
+			iconUrl: 'https://img.icons8.com/?size=50&id=kUgTl67NPdf8&format=png',
+			iconSize: [50,50],
+			iconAnchor: [25,25],
 			popupAnchor: [0, 0] 
 		}),
 		label: (
 			<div className='flex items-center'>
 				<img
-					src='https://img.icons8.com/?size=50&id=8075&format=png'
+					src='https://img.icons8.com/?size=50&id=kUgTl67NPdf8&format=png'
 					alt='door'
 					className='mr-2 h-6'
 				/>
@@ -86,15 +86,15 @@ const options = [
   {
 		value: 'treasure',
 		iconObject: new Icon ({
-			iconUrl: 'https://img.icons8.com/?size=50&id=102976&format=png',
-			iconSize: [35,35],
-			iconAnchor: [35/3,35/2],
+			iconUrl: 'https://img.icons8.com/?size=50&id=K18A1WRGEfQO&format=png',
+			iconSize: [50,50],
+			iconAnchor: [25,25],
 			popupAnchor: [0, 0] 
 		}),
 		label: (
 			<div className='flex items-center'>
 				<img
-					src='https://img.icons8.com/?size=50&id=102976&format=png'
+					src='https://img.icons8.com/?size=50&id=K18A1WRGEfQO&format=png'
 					alt='treasure'
 					className='mr-2 h-6'
 				/>
@@ -113,8 +113,8 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 		/*
 		iconObject: new Icon ({
 			iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-			iconSize: [35,35],
-			iconAnchor: [35/3,35/2],
+			iconSize: [50,50],
+			iconAnchor: [25,25],
 			popupAnchor: [0, 0] 
 		})
 		*/

@@ -194,7 +194,7 @@ const CreateEditMap = () => {
 										value={formValues.tileDirectorySchema}
 									/>
 								</Label>
-								<span className="text-xs text-gray-400">e.g. <i>{'/{z}/{y}/{x}.png'}</i></span>
+								<span className="text-xs text-gray-400">e.g. <i>{'/{z}/{x}/{y}.png'}</i></span>
 							</div>
 
 							<div className="mt-2 flex flex-wrap">
