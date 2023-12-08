@@ -13,7 +13,12 @@ export const UserLocalProvider = ({ children }) => {
 				mapAttribution: "111",
 				createdTs: "2023-12-07T06:15:52.510Z",
 				modifiedTs: "2023-12-07T06:22:45.476Z",
-				mapId: "8zwl-kEi1GqFZHnIcZYm9"
+				mapId: "8zwl-kEi1GqFZHnIcZYm9",
+				centerXCoord: '60',
+				centerYCoord: '-20',
+				initialZoom: '2',
+				minZoom: '2',
+				maxZoom: '6',
 			},
 			{
 				mapName: "Test OSM",
@@ -21,7 +26,12 @@ export const UserLocalProvider = ({ children }) => {
 				mapAttribution: "a",
 				createdTs: "2023-12-07T07:03:35.249Z",
 				modifiedTs: "2023-12-07T07:03:35.249Z",
-				mapId: "QnfGogwN0jKYk9EeEaGsL"
+				mapId: "QnfGogwN0jKYk9EeEaGsL",
+				centerXCoord: '60',
+				centerYCoord: '-20',
+				initialZoom: '2',
+				minZoom: '2',
+				maxZoom: '6',
 			}
     ]
 	})
