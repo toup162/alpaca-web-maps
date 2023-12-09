@@ -5,33 +5,35 @@ import { useParams } from 'react-router-dom/cjs/react-router-dom';
 import { UserLocalContext } from '../context/UserLocalContext';
 import { Icon } from 'leaflet';
 import CreateMarkerModal from '../components/Modals/CreateMarkerModal/CreateMarkerModal';
-import { Button } from '@windmill/react-ui';
-import { ArrowsPointingOutMiniIcon, TrashMiniIcon } from '../icons';
-import _ from 'lodash';
+import { Card, CardBody } from '@windmill/react-ui';
 import MouseTracker from '../components/MouseTracker';
 import { Tooltip as TippyTooltip } from 'react-tippy';
+import Control from 'react-leaflet-custom-control'
+import MarkerPopupControls from '../components/MarkerPopupControls';
+import AddMarker from '../icons/base64/addmarker';
+import HideMarker from '../icons/base64/hidemarker';
+import ZoomIn from '../icons/base64/zoomin';
+import ZoomOut from '../icons/base64/zoomout';
+import ShowMarker from '../icons/base64/showmarker';
 
 const ADD_MARKER_CLICK_LISTENER = 'ADD_MARKER_CLICK_LISTENER';
 const REPOSITION_MARKER_CLICK_LISTENER = 'REPOSITION_MARKER_CLICK_LISTENER';
-
 const MAP_ID_PLACEHOLDER = 'TEMP_ID';
 
 const MapViewer = () => {
 	const { mapId } = useParams();
 	const { userLocal } = useContext(UserLocalContext);
 	const mapDetails = userLocal?.maps?.find(m => m.mapId === mapId);
-
+	const [mapRef, setMapRef] = useState(null);
 	const [markers, setMarkers] = useState([]);
-	const [activeClickListener, setActiveClickListener] = useState(ADD_MARKER_CLICK_LISTENER);
+	const [activeClickListener, setActiveClickListener] = useState(null);
 	const [creatingMarker, setCreatingMarker] = useState(null);
 	const [isRepositioningMarker, setIsRepositioningMarker] = useState(null);
 	const [confirmDeleteMarkerTooltipIsOpen, setConfirmDeleteMarkerTooltipIsOpen] = useState(false);
+	const [showMarkers, setShowMarkers] = useState(true);
 
 	const MapControlHandler = () => {
 		
-		/*const map = useMapEvent('click', () => {
-			map.setView([50.5, 30.5], map.getZoom())
-		})*/
 		useMapEvent('click', e => {
 			if (activeClickListener === ADD_MARKER_CLICK_LISTENER) {
 				
@@ -66,7 +68,8 @@ const MapViewer = () => {
 				
 			}
 		})
-		return null
+
+		return <div />;
 	}
 
 	const deleteMarker = id => {
@@ -83,11 +86,14 @@ const MapViewer = () => {
 		]);
 		/* Close the modal */
 		setCreatingMarker(null);
+
+		/* Just in case 'Hide Markers' is active, set it to show markers */
+		!showMarkers && setShowMarkers(true);
 	}
 
 	return (
 		<div>
-			{activeClickListener === REPOSITION_MARKER_CLICK_LISTENER && 
+			{(activeClickListener === REPOSITION_MARKER_CLICK_LISTENER || activeClickListener === ADD_MARKER_CLICK_LISTENER)  && 
 				<MouseTracker offset={{ x: 10, y: -40 }}>Click the map to place the marker.</MouseTracker>
 			}
 			
@@ -105,100 +111,110 @@ const MapViewer = () => {
 					zoom={Number(mapDetails.initialZoom)}
 					maxZoom={Number(mapDetails.maxZoom)}
 					minZoom={Number(mapDetails.minZoom)}
+					zoomControl={false}
 					className='fullscreen-map'
+					whenReady={({ target }) => setMapRef(target)}
 				>
 					<TileLayer
 						attribution='test'
 						url={`${mapDetails.tileRootDirectoryUrl}${mapDetails.tileDirectorySchema}`}
 						noWrap={true}
 					/>
-						{markers.map(marker => {
-							return (
-								isRepositioningMarker !== marker.markerId &&
-								<Marker
-									key={marker.id}
-									position={marker.pos}
-									{...(marker.icon && { icon: marker.icon } )}
-								>
-									{marker.tooltip && activeClickListener !== REPOSITION_MARKER_CLICK_LISTENER &&
-										<Tooltip >
-											{marker.tooltip}
-										</Tooltip>
-									}
+					
+					{showMarkers && markers.map(marker => {
+						return (
+							isRepositioningMarker !== marker.markerId &&
+							<Marker
+								key={marker.id}
+								position={marker.pos}
+								{...(marker.icon && { icon: marker.icon } )}
+							>
+								{marker.tooltip && activeClickListener !== REPOSITION_MARKER_CLICK_LISTENER &&
+									<Tooltip >
+										{marker.tooltip}
+									</Tooltip>
+								}
 
-									{marker.popup && !isRepositioningMarker &&
-										<Popup maxWidth={360}>
-											<div className='text-left pb-2'>
-												<div className='text-lg font-bold'>{marker.label}</div>
-												<div className='max-h-24 overflow-y-auto mt-2'>
-													Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum.
-													Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum.
-													Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum.
-													Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum.
-													Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum. Lorem ipsum.
-												</div>
-												<div className='flex justify-end mt-4'>
-													<Button
-														size='small'
-														layout='outline'
-														className='marker-popup-button'
-														onClick={() => {
-															setIsRepositioningMarker(_.cloneDeep(marker));
-															deleteMarker(marker.id);
-															setTimeout(() => setActiveClickListener(REPOSITION_MARKER_CLICK_LISTENER), 100);
-														}}
-													>
-														<div className='transform rotate-45 mr-2'>
-															<ArrowsPointingOutMiniIcon />
-														</div>
-														Move
-													</Button>
-													<TippyTooltip
-														html={
-														<div className='p-2'>
-															<div>
-															Really Delete?
-															</div>
-															<Button size='small' layout='outline' className='mr-2 border-red-600 bg-red-600' onClick={() => deleteMarker(marker.id)}>
-																<div className='text-white flex'>
-																	<span className='mr-2'>
-																		<TrashMiniIcon />
-																	</span>
-																	Delete
-																</div>
-															</Button>
-															<Button size='small' layout='outline' onClick={() => setConfirmDeleteMarkerTooltipIsOpen(false)}>
-																<span className='text-gray-700'>Cancel</span>
-															</Button>
-														</div>}
-														position="right-end"
-														arrow
-														trigger="click"
-														interactive
-														animation='perspective'
-														open={confirmDeleteMarkerTooltipIsOpen}
-														onRequestClose={() => setConfirmDeleteMarkerTooltipIsOpen(false)}
-														theme='light'
-													>
-														<Button
-															size='small'
-															layout='outline'
-															className='marker-popup-button ml-2'
-															onClick={() => setConfirmDeleteMarkerTooltipIsOpen(true)}
-														>
-															<div className='mr-2'>
-																<TrashMiniIcon />
-															</div>
-															Delete
-														</Button>
-													</TippyTooltip>
-												</div>
+								{marker.popup && !isRepositioningMarker &&
+									<Popup maxWidth={360}>
+										<div className='text-left pb-2'>
+											<div className='text-lg font-bold'>{marker.label}</div>
+											<div className='max-h-24 overflow-y-auto mt-2'>
+												Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fuga, cum commodi a omnis numquam
+												quod? Totam exercitationem quos hic ipsam at qui cum numquam, sed amet ratione! Ratione, nihil
+												dolorum. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fuga, cum commodi a omnis numquam
+												quod? Totam exercitationem quos hic ipsam at qui cum numquam, sed amet ratione! Ratione, nihil
+												dolorum.
 											</div>
-										</Popup>
-									}
-								</Marker>
-							)
-						})}
+											<hr className='mt-5' />
+											<MarkerPopupControls
+												marker={marker}
+												setIsRepositioningMarker={setIsRepositioningMarker}
+												deleteMarker={deleteMarker}
+												setActiveClickListener={setActiveClickListener}
+												confirmDeleteMarkerTooltipIsOpen={confirmDeleteMarkerTooltipIsOpen}
+												setConfirmDeleteMarkerTooltipIsOpen={setConfirmDeleteMarkerTooltipIsOpen}
+											/>
+										</div>
+									</Popup>
+								}
+							</Marker>
+						)
+					})}
+					<Control prepend position='topleft' >
+						<Card colored  className='bg-white'>
+							<CardBody>
+								{/* Zoom Controls */}
+								<div className='flex flex-col text-gray-400 text-center'>
+									<div className='font-bold'>Zoom</div>
+									<button onClick={() => mapRef.setZoom(mapRef.getZoom() + 1)} color='inherit' layout='outline' className='rounded-b-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-300 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
+										<ZoomIn className='h-10 w-10'  />
+									</button>
+									<button onClick={() => mapRef.setZoom(mapRef.getZoom() - 1)} color='inherit' layout='outline' className='rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-300 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
+										<ZoomOut className='h-10 w-10' />
+									</button>
+								</div>
+
+								<hr className='mt-4 mb-3' />
+
+								{/* Marker Controls */}
+								<div className='flex flex-col text-gray-400 text-center'>
+									<div className='font-bold'>Markers</div>
+									<TippyTooltip
+										html={<div className='p-2'>New Marker</div>}
+										position="right"
+										trigger='mouseenter'
+										arrow
+										theme='light'
+										disabled={activeClickListener === ADD_MARKER_CLICK_LISTENER}
+									>
+										<button onClick={() => setActiveClickListener(ADD_MARKER_CLICK_LISTENER)} color='inherit' layout='outline' className='rounded-b-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-300 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
+											<AddMarker className='h-10 w-10' />
+										</button>
+									</TippyTooltip>
+									<TippyTooltip
+										html={
+											<div className='p-2'>
+												{showMarkers ? 'Hide Markers' : 'Show Markers'}
+											</div>
+										}
+										position="right"
+										trigger='mouseenter'
+										arrow
+										theme='light'
+									>
+										<button onClick={() => setShowMarkers(!showMarkers)} color='inherit' layout='outline' className={`${!showMarkers && 'bg-red-300'} rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-300 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray`}> 
+											{ showMarkers 
+													? <HideMarker className='h-10 w-10' />
+													: <ShowMarker className='h-10 w-10' />
+											}
+										</button>
+									</TippyTooltip>
+								</div>
+							</CardBody>
+						</Card>
+					</Control>
+
 					<MapControlHandler />
 				</MapContainer>
 			</div>

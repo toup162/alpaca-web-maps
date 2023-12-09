@@ -12,9 +12,12 @@ const MouseTracker = ({ children, offset = { x: 0, y: 0} }) => {
 							element.current.style.visibility = 'visible';
 					}
 			}
-			handler();
 			document.addEventListener('mousemove', handler);
-			return () => document.removeEventListener('mousemove', handler);
+			document.addEventListener('mouseup', handler);
+			return () => {
+				document.removeEventListener('mousemove', handler);
+				document.addEventListener('mouseup', handler);
+			};
 	}, [offset.x, offset.y]);
 
 	return createPortal(

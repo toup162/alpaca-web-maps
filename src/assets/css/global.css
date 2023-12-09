@@ -253,6 +253,7 @@ div.react-switch-selector-option {
 }
 
 .positioning-marker,
-.positioning-marker div {
+.positioning-marker div,
+.positioning-marker button {
 	cursor: crosshair!important;
 }
