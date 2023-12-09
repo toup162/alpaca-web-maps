@@ -161,10 +161,17 @@ div.react-switch-selector-option {
 	width: 1.5rem;
 }
 
-.tippy-tooltip {
+.tippy-tooltip.dark-theme {
   box-shadow: 0px 3px 9px 0px #000;
 	padding: 0px!important;
 	min-width: 200px;
+}
+
+.tippy-tooltip.light-theme {
+  box-shadow: 0px 3px 9px 0px #000;
+	padding: 0px!important;
+	min-width: 100px;
+	border: 1px solid #c7c7c7;
 }
 
 .options-tooltip-content-container {
@@ -215,4 +222,37 @@ div.react-switch-selector-option {
 
 .modal-wrapper {
 	z-index: 1001;
+}
+
+.required::after {
+	content: ' *';
+	color: #f98080;
+}
+
+.leaflet-popup-content-wrapper button.marker-popup-button {
+	color: #000;
+	border-color: #c7c7c7;
+}
+
+.leaflet-tooltip-pane {
+	z-index: 10000;
+}
+
+.mouse-tracker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-color: white;
+  padding: 2px 7px;
+  border-radius: 3px;
+  white-space: nowrap;
+  visibility: hidden;
+	z-index: 1000000;
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.positioning-marker,
+.positioning-marker div {
+	cursor: crosshair!important;
 }

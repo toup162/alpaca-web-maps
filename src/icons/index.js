@@ -36,6 +36,7 @@ import { ReactComponent as TrashMiniIcon} from './trashmini.svg';
 import { ReactComponent as CogIcon} from './cog.svg';
 import { ReactComponent as LinkIcon} from './link.svg';
 import { ReactComponent as AdjustmentsHorizontalIcon} from './adjustmentshorizontal.svg';
+import { ReactComponent as ArrowsPointingOutMiniIcon} from './arrowspointoutmini.svg';
 
 export {
 	ButtonsIcon,
@@ -76,4 +77,5 @@ export {
 	CogIcon,
 	LinkIcon,
 	AdjustmentsHorizontalIcon,
+	ArrowsPointingOutMiniIcon,
 }

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Label, Input } from '@windmill/react-ui'
+import { Modal, ModalBody, ModalFooter, Button, Label, Input } from '@windmill/react-ui'
 import './CreateMarkerModal.css';
 import { nanoid } from 'nanoid';
 import { Icon } from 'leaflet';
 import Select from 'react-select'
 import _ from 'lodash';
+import IconSizeRadio from './IconSizeRadio';
 
-const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, deletePlaceholderMarker }) => {
+const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, deleteMarker }) => {
   
 	const handleInputChange = (e, inputId) => {
 		let newFormValues = _.cloneDeep(formValues);
@@ -21,7 +22,7 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 	}
 	
 	const onClose = () => {
-		deletePlaceholderMarker();
+		deleteMarker('TEMP_ID');
 		setCreatingMarker(null);
 		cleanupForm();
 	}
@@ -33,6 +34,8 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 	const onConfirmClick = () => {
 		const newMarker = {
 			...formValues,
+			tooltip: formValues.label,
+			popup: formValues.label,
 			icon: new Icon ({
 				iconUrl: `https://img.icons8.com/?size=50&id=${formValues.icon.id}&format=png`,
 				iconSize: iconSizes[formValues.iconProfile],
@@ -40,8 +43,11 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 					? [iconAnchors[formValues.iconProfile][0], iconAnchors[formValues.iconProfile][1] * 2]
 					: iconAnchors[formValues.iconProfile],
 				tooltipAnchor: formValues.icon.pinpointAnchor
-					? [0,0]
-					: tooltipAnchors[formValues.iconProfile]
+					? [tooltipAnchors[formValues.iconProfile][0], -tooltipAnchors[formValues.iconProfile][0]]
+					: tooltipAnchors[formValues.iconProfile],
+				popupAnchor: formValues.icon.pinpointAnchor
+					?	[0, popupAnchors[formValues.iconProfile][1] * 2]
+					: popupAnchors[formValues.iconProfile]
 			}),
 			pos: creatingMarker.pos,
 			id: nanoid(),
@@ -68,8 +74,14 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 		large: [24,0],
 	};
 
+	const popupAnchors = {
+		small: [0,-12],
+		default: [0,-18],
+		large: [0,-24],
+	};
+
 	const [formValues, setFormValues] = useState({
-		tooltip: '',
+		label: '',
 		popup: '',
 		iconProfile: 'default',
 		icon: {
@@ -176,129 +188,58 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 	);
 
 	const defaultFormValues = {
-		tooltip: '',
+		label: '',
 		popup: '',
 		icon: iconOption({id: 'Sk4BAluINF9y', optionValue: 'marker', label: 'Default', pinpointAnchor: true}),
 		iconProfile: 'default'
+	}
+
+	const formIsInvalid = () => {
+		return formValues && (!formValues?.label
+
+		)
 	}
 
 	return (
     <div className='modal-wrapper'>
 			<Modal isOpen={creatingMarker} onClose={onClose}>
 					
-				<ModalHeader>Create Marker</ModalHeader>
+				<div className='text-lg font-semibold text-gray-700 dark:text-gray-300'>Create Marker</div>
 
 				<ModalBody>
-						<div className="create-marker-modal-body-content px-4 py-3 mb-8 bg-white rounded-lg dark:bg-gray-800">
-								<Label className="mt-4">
-									<span className='text-gray-200 '>Icon</span>
-								
-									<div className='text-black mt-1'>
-										<Select
-											options={groupedOptions}
-											onChange={o => handleIconOptionSelect(o)}
-											defaultValue={groupedOptions[0].options[0]}
-											isSearchable={true}
-											className="icon-select-container"
-   										classNamePrefix="icon-select"
-											formatGroupLabel={formatGroupLabel}
-										/>
-									</div>
-								</Label>
-
-								<Label className="mt-4">
-									<span className='text-gray-200 '>Icon Size</span>
-								</Label>
-								<div className="grid grid-cols-3 gap-2 rounded bg-gray-700 p-2 mt-1">
-									<div>
-										<input
-											type="radio"
-											name="iconProfile"
-											id="profile-small"
-											value="small"
-											className="peer hidden"
-											checked={formValues.iconProfile === 'small'}
-											onChange={e => handleInputChange(e, 'iconProfile')}
-										/>
-										<label htmlFor="profile-small" className="h-full flex items-center block cursor-pointer select-none p-2 text-left peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white">
-											<div className='flex items-center'>
-												<img
-													src={`https://img.icons8.com/?size=50&id=${formValues?.icon?.id}&format=png`}
-													alt='icon size small'
-													className='mr-2'
-													style={{height: '24px'}}
-												/>
-												<div>
-													<div>Small</div>
-													<div>24x24 px</div>
-												</div>
-											</div>
-										</label>
-									</div>
-									<div>
-										<input
-											type="radio"
-											name="iconProfile"
-											id="profile-default"
-											value="default"
-											className="peer hidden"
-											checked={formValues.iconProfile === 'default'}
-											onChange={e => handleInputChange(e, 'iconProfile')}
-										/>
-										<label htmlFor="profile-default" className="h-full flex items-center block cursor-pointer select-none p-2 text-left peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white">
-											<div className='flex items-center'>
-												<img
-													src={`https://img.icons8.com/?size=50&id=${formValues?.icon?.id}&format=png`}
-													alt='icon size default'
-													className='mr-2'
-													style={{height: '36px'}}
-												/>
-												<div>
-													<div>Medium</div>
-													<div>36x36 px</div>
-												</div>
-											</div>
-										</label>
-									</div>
-									<div>
-										<input
-											type="radio"
-											name="iconProfile"
-											id="profile-large"
-											value="large"
-											className="peer hidden"
-											checked={formValues.iconProfile === 'large'}
-											onChange={e => handleInputChange(e, 'iconProfile')}
-										/>
-										<label htmlFor="profile-large" className="h-full flex items-center block cursor-pointer select-none p-2 text-left peer-checked:bg-blue-500 peer-checked:font-bold peer-checked:text-white">
-											<div className='flex items-center'>
-												<img
-													src={`https://img.icons8.com/?size=50&id=${formValues?.icon?.id}&format=png`}
-													alt='icon size large'
-													className='mr-2'
-													style={{height: '48px'}}
-												/>
-												<div>
-													<div>Large</div>
-													<div>48x48 px</div>
-												</div>
-											</div>
-										</label>
-									</div>
-									
+					<div className="create-marker-modal-body-content px-4 pb-3 mb-8 bg-white rounded-lg dark:bg-gray-800">
+						
+						<Label className='mt-4'>
+							<span className='text-gray-200 required'>Label</span>
+							<Input
+								id='label'
+								className="mt-1 placeholder-gray-500"
+								placeholder="Label text"
+								onChange={e => handleInputChange(e, 'label')}
+								value={formValues.label}
+							/>
+						</Label>
+						
+						<Label className="mt-4">
+							<span className='text-gray-200'>Icon</span>
+							<div className='text-black mt-1'>
+								<Select
+									options={groupedOptions}
+									onChange={o => handleIconOptionSelect(o)}
+									defaultValue={groupedOptions[0].options[0]}
+									isSearchable={true}
+									className="icon-select-container"
+									classNamePrefix="icon-select"
+									formatGroupLabel={formatGroupLabel}
+								/>
 							</div>
+						</Label>
 
-								<Label className='mt-4'>
-									<span className='text-gray-200'>Tooltip</span>
-									<Input
-										id='tooltip'
-										className="mt-1 placeholder-gray-500"
-										placeholder="Tooltip text"
-										onChange={e => handleInputChange(e, 'tooltip')}
-										value={formValues.tooltip}
-									/>
-								</Label>
-						</div>
+						<IconSizeRadio
+							formValues={formValues}
+							handleInputChange={handleInputChange}
+						/>
+					</div>
 				</ModalBody>
 
 				<div className="mb-8 sm:mb-12">
@@ -309,7 +250,7 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 							</Button>
 						</div>
 						<div className="hidden sm:block">
-							<Button onClick={onConfirmClick}>Accept</Button>
+							<Button onClick={onConfirmClick} disabled={formIsInvalid()}>Accept</Button>
 						</div>
 						<div className="block w-full sm:hidden">
 							<Button block size="large" layout="outline" onClick={onClose}>
@@ -317,7 +258,7 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 							</Button>
 						</div>
 						<div className="block w-full sm:hidden">
-							<Button block size="large" onClick={onConfirmClick}>
+							<Button block size="large" onClick={onConfirmClick} disabled={formIsInvalid()}>
 								Accept
 							</Button>
 						</div>
