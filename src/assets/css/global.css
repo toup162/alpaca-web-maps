@@ -71,11 +71,8 @@ div.react-switch-selector-option {
 	background: #1e2129;
 }
 
+.z-1000,
 .fixed.z-40 {
-    z-index: 600!important;
-}
-
-.z-1000 {
     z-index: 1000!important;
 }
 
@@ -256,4 +253,8 @@ div.react-switch-selector-option {
 .positioning-marker div,
 .positioning-marker button {
 	cursor: crosshair!important;
+}
+
+.whitespace-nowrap {
+	white-space: nowrap;
 }

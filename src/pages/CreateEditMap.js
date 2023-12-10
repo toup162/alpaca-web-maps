@@ -71,6 +71,7 @@ const CreateEditMap = () => {
 	const handleCreate = () => {
 		const newMap = {
 			...formValues,
+			center: [formValues.centerXCoord, formValues.centerYCoord],
 			createdTs: moment(),
 			modifiedTs: moment(), 
 			mapId: nanoid()
@@ -83,6 +84,7 @@ const CreateEditMap = () => {
 	const handleSaveEdit = () => {
 		const newMap = {
 			...formValues,
+			center: [formValues.centerXCoord, formValues.centerYCoord],
 			modifiedTs: moment(), 
 		};
 		updateMap(newMap);

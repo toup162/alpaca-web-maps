@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent } from 'react-leaflet'
 import { useParams } from 'react-router-dom/cjs/react-router-dom';
@@ -15,22 +15,26 @@ import HideMarker from '../icons/base64/hidemarker';
 import ZoomIn from '../icons/base64/zoomin';
 import ZoomOut from '../icons/base64/zoomout';
 import ShowMarker from '../icons/base64/showmarker';
+import MapFavorite from '../icons/base64/mapfavorite';
+import toast from 'react-hot-toast';
+import { LinkIcon } from '../icons';
 
 const ADD_MARKER_CLICK_LISTENER = 'ADD_MARKER_CLICK_LISTENER';
 const REPOSITION_MARKER_CLICK_LISTENER = 'REPOSITION_MARKER_CLICK_LISTENER';
 const MAP_ID_PLACEHOLDER = 'TEMP_ID';
 
 const MapViewer = () => {
-	const { mapId } = useParams();
-	const { userLocal } = useContext(UserLocalContext);
+	const { mapId, markerId: markerIdFromUrl } = useParams();
+	const { userLocal, setMarkersByMapId, updateMap } = useContext(UserLocalContext);
 	const mapDetails = userLocal?.maps?.find(m => m.mapId === mapId);
+	const markers = mapDetails?.markers || [];
 	const [mapRef, setMapRef] = useState(null);
-	const [markers, setMarkers] = useState([]);
 	const [activeClickListener, setActiveClickListener] = useState(null);
 	const [creatingMarker, setCreatingMarker] = useState(null);
 	const [isRepositioningMarker, setIsRepositioningMarker] = useState(null);
 	const [confirmDeleteMarkerTooltipIsOpen, setConfirmDeleteMarkerTooltipIsOpen] = useState(false);
 	const [showMarkers, setShowMarkers] = useState(true);
+	const [forceInitialMarkerPopup, setForceInitialMarkerPopup] = useState(true);
 
 	const MapControlHandler = () => {
 		
@@ -49,14 +53,14 @@ const MapViewer = () => {
 					})
 				};
 
-				setMarkers([...markers, placeholderMarker])
+				setMarkersByMapId(mapId, [...markers, placeholderMarker])
 
 				/* Open a modal to customize the marker being created */
 				setCreatingMarker(placeholderMarker);
 				setActiveClickListener(null);
 
 			} else if (activeClickListener === REPOSITION_MARKER_CLICK_LISTENER) {
-				setMarkers([
+				setMarkersByMapId(mapId, [
 					...markers,
 					{
 						...isRepositioningMarker,
@@ -73,14 +77,14 @@ const MapViewer = () => {
 	}
 
 	const deleteMarker = id => {
-		setMarkers([
+		setMarkersByMapId(mapId, [
 			...markers.filter(marker => marker.id !== id)
 		]);
 	}
 
 	const onConfirmCreateMarker = newMarker => {
 		/* Delete the placeholder marker, add the new marker */
-		setMarkers([
+		setMarkersByMapId(mapId, [
 			...markers.filter(marker => marker.id !== MAP_ID_PLACEHOLDER),
 			newMarker
 		]);
@@ -91,6 +95,36 @@ const MapViewer = () => {
 		!showMarkers && setShowMarkers(true);
 	}
 
+	/* If the marker ID from the URL is a real marker */
+	const onMapContainerReady = ({ target }) => {
+		setMapRef(target);
+		
+		const markerFromUrl = markers.find(marker => marker.id === markerIdFromUrl);
+		/* Pan/Zoom to marker gathered from URL */
+		if (target && markerFromUrl) {
+			target && target.setView(markerFromUrl.pos, mapDetails.maxZoom, {animate: false, duration: 0});
+		}
+	};
+	
+	useEffect(() => {
+		forceInitialMarkerPopup && mapRef?.eachLayer((layer) => {
+			const layerPopup = layer.getPopup();
+			if (layerPopup?.options?.markerId === markerIdFromUrl) {
+				layer.togglePopup()
+				setForceInitialMarkerPopup(false);
+			}
+		});
+		
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [mapRef])
+
+	const onClickCopyMarkerUrl = markerIdToCopy => {
+		navigator.clipboard.writeText(`${window.location.origin}/app/map/${mapId}/${markerIdToCopy}`);
+		toast.success('Marker URL copied to clipboard!', {
+			duration: 4000
+		});
+	}
+	
 	return (
 		<div>
 			{(activeClickListener === REPOSITION_MARKER_CLICK_LISTENER || activeClickListener === ADD_MARKER_CLICK_LISTENER)  && 
@@ -113,7 +147,7 @@ const MapViewer = () => {
 					minZoom={Number(mapDetails.minZoom)}
 					zoomControl={false}
 					className='fullscreen-map'
-					whenReady={({ target }) => setMapRef(target)}
+					whenReady={onMapContainerReady}
 				>
 					<TileLayer
 						attribution='test'
@@ -136,9 +170,26 @@ const MapViewer = () => {
 								}
 
 								{marker.popup && !isRepositioningMarker &&
-									<Popup maxWidth={360}>
+									<Popup markerId={marker.id} maxWidth={360} closeButton={false}>
 										<div className='text-left pb-2'>
-											<div className='text-lg font-bold'>{marker.label}</div>
+											<div className='w-full flex justify-between'>
+												<div className='text-lg font-bold'>{marker.label}</div>
+												<div>
+													<button
+														className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-sm text-gray-800 border focus:outline-none active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray active:bg-gray-300"
+														type="button"
+														onClick={() => onClickCopyMarkerUrl(marker.id)}
+													>
+														<div className="flex items-center whitespace-nowrap">
+															<LinkIcon className='h-3 w-3 mr-1' />
+															<span className='text-xs whitespace-nowrap'>Copy URL</span>
+														</div>
+													</button>
+												</div>
+											</div>
+
+											<hr className='mt-2 mb-3' />
+
 											<div className='max-h-24 overflow-y-auto mt-2'>
 												{marker.description}
 											</div>
@@ -162,20 +213,43 @@ const MapViewer = () => {
 							<CardBody>
 								{/* Zoom Controls */}
 								<div className='flex flex-col text-gray-400 text-center'>
-									<div className='font-bold'>Zoom</div>
 									<button onClick={() => mapRef.setZoom(mapRef.getZoom() + 1)} color='inherit' layout='outline' className='rounded-b-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
-										<ZoomIn className='h-10 w-10'  />
+										<ZoomIn className='h-8 w-8'  />
 									</button>
-									<button onClick={() => mapRef.setZoom(mapRef.getZoom() - 1)} color='inherit' layout='outline' className='rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
-										<ZoomOut className='h-10 w-10' />
+									<button onClick={() => mapRef.setZoom(mapRef.getZoom() - 1)} color='inherit' layout='outline' className='align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
+										<ZoomOut className='h-8 w-8' />
 									</button>
+									<TippyTooltip
+										html={<div className='p-2'>Save current Zoom/Pan as default</div>}
+										position="right"
+										trigger='mouseenter'
+										arrow
+										theme='light'
+									>
+										<button
+											color='inherit'
+											layout='outline'
+											className='rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray' 
+											onClick={() => {
+												updateMap({
+													...mapDetails,
+													center: mapRef.getBounds().getCenter(),
+													centerXCoord: mapRef.getBounds().getCenter()?.lat,
+													centerYCoord: mapRef.getBounds().getCenter()?.lng,
+													initialZoom: mapRef.getZoom()
+												});
+												toast.success('Saved current view as default!');
+											}}
+										>
+											<MapFavorite className='h-8 w-8' />
+										</button>
+									</TippyTooltip>
 								</div>
 
-								<hr className='mt-4 mb-3 border-gray-600' />
+								<hr className='my-4 border-gray-600' />
 
 								{/* Marker Controls */}
 								<div className='flex flex-col text-gray-400 text-center'>
-									<div className='font-bold'>Markers</div>
 									<TippyTooltip
 										html={<div className='p-2'>New Marker</div>}
 										position="right"
@@ -185,7 +259,7 @@ const MapViewer = () => {
 										disabled={activeClickListener === ADD_MARKER_CLICK_LISTENER}
 									>
 										<button onClick={() => setActiveClickListener(ADD_MARKER_CLICK_LISTENER)} color='inherit' layout='outline' className='rounded-b-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
-											<AddMarker className='h-10 w-10' />
+											<AddMarker className='h-8 w-8' />
 										</button>
 									</TippyTooltip>
 									<TippyTooltip
@@ -201,8 +275,8 @@ const MapViewer = () => {
 									>
 										<button onClick={() => setShowMarkers(!showMarkers)} color='inherit' layout='outline' className={`${!showMarkers && 'bg-red-300 '} rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray`}> 
 											{ showMarkers 
-													? <HideMarker className='h-10 w-10' />
-													: <ShowMarker className='h-10 w-10' />
+													? <HideMarker className='h-8 w-8' />
+													: <ShowMarker className='h-8 w-8' />
 											}
 										</button>
 									</TippyTooltip>

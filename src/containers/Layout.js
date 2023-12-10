@@ -49,6 +49,7 @@ function Layout() {
                                     />
                                 ) : null
                             })}
+														<Route component={MapViewer} path={`/app/map/:mapId/:markerId?`} />
 														<Route component={MapViewer} path={`/app/map/:mapId`} />
 														<Route component={CreateEditMap} path={`/app/create-map`} />
 														<Route component={CreateEditMap} path={`/app/edit-map/:mapId`} />

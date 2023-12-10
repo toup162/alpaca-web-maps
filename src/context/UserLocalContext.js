@@ -1,11 +1,24 @@
+import { Icon } from 'leaflet';
 import _ from 'lodash'
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 
 export const UserLocalContext = React.createContext()
 
 export const UserLocalProvider = ({ children }) => {
 	
-	const [userLocal, setUserLocal] = useState({
+	/* Try to get local storage for user data */
+	const stringifiedUserLocal = localStorage.getItem('ALPACA_WEB_MAPS_USER_LOCAL');
+	const parsedUserLocal = JSON.parse(stringifiedUserLocal);
+	parsedUserLocal?.maps?.forEach(map => {
+		/* factory for parsed JSON of marker icons into Icon objects */
+		map.markers?.forEach(marker => {
+			marker.icon = new Icon ({
+				...marker.icon.options
+			})
+		})
+	});
+
+	const [userLocal, setUserLocal] = useState(parsedUserLocal ? parsedUserLocal : {
     maps: [
 			{
 				mapName: "Map Name",
@@ -50,9 +63,9 @@ export const UserLocalProvider = ({ children }) => {
 		parsedUserLocal && setUserLocal(parsedUserLocal);
 	}
 
-	const saveToLocalStorage = () => {
+	useEffect(() => {
 		localStorage.setItem('ALPACA_WEB_MAPS_USER_LOCAL', JSON.stringify(userLocal));
-	}
+	}, [userLocal])
 
 	const addMap = map => {
 		const clonedUserLocal = userLocal ? _.cloneDeep(userLocal) : { };
@@ -75,6 +88,15 @@ export const UserLocalProvider = ({ children }) => {
 		}
 	}
 
+	const setMarkersByMapId = (mapId, markers) => {
+		const clonedUserLocal = userLocal ? _.cloneDeep(userLocal) : { };
+		const mapToUpdate = clonedUserLocal?.maps?.find(m => m.mapId === mapId);
+		if (mapToUpdate) {
+			mapToUpdate.markers = markers;
+			setUserLocal(clonedUserLocal);
+		}
+	}
+
 	const deleteMap = mapId => {
 		const clonedUserLocal = userLocal ? _.cloneDeep(userLocal) : { };
 		clonedUserLocal.maps = userLocal.maps.filter(m => m.mapId !== mapId);
@@ -82,16 +104,16 @@ export const UserLocalProvider = ({ children }) => {
 	}
 
 	const value = useMemo(
-			() => ({
-					userLocal,
-					initFromLocalStorage,
-					saveToLocalStorage,
-					addMap,
-					deleteMap,
-					updateMap
-			}),
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[userLocal]
+		() => ({
+			userLocal,
+			initFromLocalStorage,
+			addMap,
+			deleteMap,
+			updateMap,
+			setMarkersByMapId,
+		}),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[userLocal]
 	)
 
 	return <UserLocalContext.Provider value={value}>{children}</UserLocalContext.Provider>
