@@ -4,7 +4,7 @@ import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent } from 're
 import { useParams } from 'react-router-dom/cjs/react-router-dom';
 import { UserLocalContext } from '../context/UserLocalContext';
 import { Icon } from 'leaflet';
-import CreateMarkerModal from '../components/Modals/CreateMarkerModal/CreateMarkerModal';
+import CreateEditMarkerModal from '../components/Modals/CreateEditMarkerModal/CreateEditMarkerModal';
 import { Card, CardBody } from '@windmill/react-ui';
 import MouseTracker from '../components/MouseTracker';
 import { Tooltip as TippyTooltip } from 'react-tippy';
@@ -30,7 +30,7 @@ const MapViewer = () => {
 	const markers = mapDetails?.markers || [];
 	const [mapRef, setMapRef] = useState(null);
 	const [activeClickListener, setActiveClickListener] = useState(null);
-	const [creatingMarker, setCreatingMarker] = useState(null);
+	const [creatingEditingMarker, setCreatingEditingMarker] = useState(null);
 	const [isRepositioningMarker, setIsRepositioningMarker] = useState(null);
 	const [confirmDeleteMarkerTooltipIsOpen, setConfirmDeleteMarkerTooltipIsOpen] = useState(false);
 	const [showMarkers, setShowMarkers] = useState(true);
@@ -56,7 +56,7 @@ const MapViewer = () => {
 				setMarkersByMapId(mapId, [...markers, placeholderMarker])
 
 				/* Open a modal to customize the marker being created */
-				setCreatingMarker(placeholderMarker);
+				setCreatingEditingMarker(placeholderMarker);
 				setActiveClickListener(null);
 
 			} else if (activeClickListener === REPOSITION_MARKER_CLICK_LISTENER) {
@@ -82,14 +82,14 @@ const MapViewer = () => {
 		]);
 	}
 
-	const onConfirmCreateMarker = ({newMarker, idToDelete}) => {
+	const onConfirmCreateEditMarker = ({newMarker, idToDelete}) => {
 		/* Delete the placeholder marker, add the new marker */
 		setMarkersByMapId(mapId, [
 			...markers.filter(marker => marker.id !== idToDelete),
 			newMarker
 		]);
 		/* Close the modal */
-		setCreatingMarker(null);
+		setCreatingEditingMarker(null);
 
 		/* Just in case 'Hide Markers' is active, set it to show markers */
 		!showMarkers && setShowMarkers(true);
@@ -113,7 +113,7 @@ const MapViewer = () => {
 	};
 
 	const onClickEditMarker = marker => {
-		setCreatingMarker(marker);
+		setCreatingEditingMarker(marker);
 	}
 	
 	useEffect(() => {
@@ -141,11 +141,11 @@ const MapViewer = () => {
 				<MouseTracker offset={{ x: 10, y: -40 }}>Click the map to place the marker.</MouseTracker>
 			}
 			
-			<CreateMarkerModal
-				creatingMarker={creatingMarker}
-				setCreatingMarker={setCreatingMarker}
+			<CreateEditMarkerModal
+				creatingEditingMarker={creatingEditingMarker}
+				setCreatingEditingMarker={setCreatingEditingMarker}
 				deleteMarker={deleteMarker}
-				onConfirmCreateMarker={onConfirmCreateMarker}
+				onConfirmCreateEditMarker={onConfirmCreateEditMarker}
 			/>
 			
 			{mapDetails &&
@@ -250,7 +250,7 @@ const MapViewer = () => {
 													centerYCoord: mapRef.getBounds().getCenter()?.lng,
 													initialZoom: mapRef.getZoom()
 												});
-												toast.success('Saved current view as default!');
+												toast.success('Saved current view as default!', {duration: 3000});
 											}}
 										>
 											<MapFavorite className='h-8 w-8' />

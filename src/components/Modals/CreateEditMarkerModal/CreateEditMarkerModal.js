@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import { Modal, ModalBody, ModalFooter, Button, Label, Input } from '@windmill/react-ui'
-import './CreateMarkerModal.css';
+import './CreateEditMarkerModal.css';
 import { nanoid } from 'nanoid';
 import { Icon } from 'leaflet';
 import Select from 'react-select'
 import _ from 'lodash';
 import IconSizeRadio from './IconSizeRadio';
 
-const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirmCreateMarker, deleteMarker }) => {
+const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker, onConfirmCreateEditMarker, deleteMarker }) => {
   
+	const isCreatingNewMarker = (!creatingEditingMarker || creatingEditingMarker?.id === 'TEMP_ID');
+
 	const handleInputChange = (e, inputId) => {
 		let newFormValues = _.cloneDeep(formValues);
 		newFormValues[inputId] = e.target?.value;
@@ -22,10 +24,10 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirmCreateM
 	}
 	
 	const onClose = () => {
-		if (creatingMarker?.id === 'TEMP_ID') {
+		if (isCreatingNewMarker) {
 			deleteMarker('TEMP_ID');
 		}
-		setCreatingMarker(null);
+		setCreatingEditingMarker(null);
 		cleanupForm();
 	}
 
@@ -52,11 +54,11 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirmCreateM
 					?	[0, popupAnchors[formValues.iconProfile][1] * 2]
 					: popupAnchors[formValues.iconProfile]
 			}),
-			pos: creatingMarker.pos,
-			id: creatingMarker?.id === 'TEMP_ID' ? nanoid() : creatingMarker.id
+			pos: creatingEditingMarker.pos,
+			id: isCreatingNewMarker ? nanoid() : creatingEditingMarker.id
 		}
 		
-		onConfirmCreateMarker({newMarker: newMarker, idToDelete: creatingMarker.id});
+		onConfirmCreateEditMarker({newMarker: newMarker, idToDelete: creatingEditingMarker.id});
 		cleanupForm();
 	}
 
@@ -161,20 +163,19 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirmCreateM
 	const allIconOptions = [...genericOptions, ...interiorOptions, ...rpgOptions];
 
 	/* If editing existing marker */
-	if (creatingMarker && creatingMarker.id !== 'TEMP_ID' && formValues?.label === '') {
-		const existingIconDetails = creatingMarker.icon?.options;
+	if (creatingEditingMarker && !isCreatingNewMarker && formValues?.label === '') {
+		const existingIconDetails = creatingEditingMarker.icon?.options;
 		const correspondingSelectOption = allIconOptions.find(iconOption => iconOption.id === getIconIdFromIconCdnUrl(existingIconDetails.iconUrl));
 		const newEditFormValues = {
-			label: creatingMarker.label,
-			description: creatingMarker.description,
-			popup: creatingMarker.popup,
-			iconProfile: creatingMarker.iconProfile,
+			label: creatingEditingMarker.label,
+			description: creatingEditingMarker.description,
+			popup: creatingEditingMarker.popup,
+			iconProfile: creatingEditingMarker.iconProfile,
 			icon: correspondingSelectOption,
 		};
 		
 		setFormValues(newEditFormValues);
 	}
-
 
 	const groupedOptions = [
 		{
@@ -233,9 +234,11 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirmCreateM
 
 	return (
     <div className='modal-wrapper'>
-			<Modal isOpen={creatingMarker} onClose={onClose}>
+			<Modal isOpen={creatingEditingMarker} onClose={onClose}>
 					
-				<div className='text-lg font-semibold text-gray-700 dark:text-gray-300'>Create Marker</div>
+				<div className='text-lg font-semibold text-gray-700 dark:text-gray-300'>
+					{isCreatingNewMarker ? 'Create Marker' : 'Edit Marker'}
+				</div>
 
 				<ModalBody>
 					<div className="create-marker-modal-body-content px-4 pb-3 mb-8 bg-white rounded-lg dark:bg-gray-800">
@@ -265,12 +268,12 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirmCreateM
 						<Label className="mt-4">
 							<span className='text-gray-200'>Icon</span>
 							<div className='text-black mt-1'>
-								{((creatingMarker?.id === 'TEMP_ID') || (creatingMarker && creatingMarker.id !== 'TEMP_ID' && formValues.icon.value)) &&
+								{((isCreatingNewMarker) || (creatingEditingMarker && !isCreatingNewMarker && formValues.icon.value)) &&
 									<Select
 										options={groupedOptions}
 										onChange={o => handleIconOptionSelect(o)}
 										defaultValue={
-											creatingMarker?.id !== 'TEMP_ID' && creatingMarker?.icon
+											!isCreatingNewMarker && creatingEditingMarker?.icon
 												? formValues.icon
 												: groupedOptions[0].options[0]
 										}
@@ -318,4 +321,4 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirmCreateM
     )
 }
 
-export default CreateMarkerModal
+export default CreateEditMarkerModal

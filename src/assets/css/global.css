@@ -283,5 +283,6 @@ div.react-switch-selector-option {
 	border: 3px dashed #c1c1c1;
 	border-bottom-left-radius: 12px;
 	border-bottom-right-radius: 12px;
+	min-width: 200px;
 }
 
