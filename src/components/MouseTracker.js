@@ -16,7 +16,7 @@ const MouseTracker = ({ children, offset = { x: 0, y: 0} }) => {
 			document.addEventListener('mouseup', handler);
 			return () => {
 				document.removeEventListener('mousemove', handler);
-				document.addEventListener('mouseup', handler);
+				document.removeEventListener('mouseup', handler);
 			};
 	}, [offset.x, offset.y]);
 

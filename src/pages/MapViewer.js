@@ -82,10 +82,10 @@ const MapViewer = () => {
 		]);
 	}
 
-	const onConfirmCreateMarker = newMarker => {
+	const onConfirmCreateMarker = ({newMarker, idToDelete}) => {
 		/* Delete the placeholder marker, add the new marker */
 		setMarkersByMapId(mapId, [
-			...markers.filter(marker => marker.id !== MAP_ID_PLACEHOLDER),
+			...markers.filter(marker => marker.id !== idToDelete),
 			newMarker
 		]);
 		/* Close the modal */
@@ -93,6 +93,12 @@ const MapViewer = () => {
 
 		/* Just in case 'Hide Markers' is active, set it to show markers */
 		!showMarkers && setShowMarkers(true);
+
+		toast.success(
+			idToDelete === 'TEMP_ID' ? 'Marker created!' : 'Marker updated!',
+			{ duration: 2500 }
+		);
+		
 	}
 
 	/* If the marker ID from the URL is a real marker */
@@ -105,6 +111,10 @@ const MapViewer = () => {
 			target && target.setView(markerFromUrl.pos, mapDetails.maxZoom, {animate: false, duration: 0});
 		}
 	};
+
+	const onClickEditMarker = marker => {
+		setCreatingMarker(marker);
+	}
 	
 	useEffect(() => {
 		forceInitialMarkerPopup && mapRef?.eachLayer((layer) => {
@@ -135,7 +145,7 @@ const MapViewer = () => {
 				creatingMarker={creatingMarker}
 				setCreatingMarker={setCreatingMarker}
 				deleteMarker={deleteMarker}
-				onConfirm={onConfirmCreateMarker}
+				onConfirmCreateMarker={onConfirmCreateMarker}
 			/>
 			
 			{mapDetails &&
@@ -157,7 +167,7 @@ const MapViewer = () => {
 					
 					{showMarkers && markers.map(marker => {
 						return (
-							isRepositioningMarker !== marker.markerId &&
+							isRepositioningMarker !== marker.id &&
 							<Marker
 								key={marker.id}
 								position={marker.pos}
@@ -171,37 +181,39 @@ const MapViewer = () => {
 
 								{marker.popup && !isRepositioningMarker &&
 									<Popup markerId={marker.id} maxWidth={360} closeButton={false}>
-										<div className='text-left pb-2'>
-											<div className='w-full flex justify-between'>
-												<div className='text-lg font-bold'>{marker.label}</div>
-												<div>
-													<button
-														className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-sm text-gray-800 border focus:outline-none active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray active:bg-gray-300"
-														type="button"
-														onClick={() => onClickCopyMarkerUrl(marker.id)}
-													>
-														<div className="flex items-center whitespace-nowrap">
-															<LinkIcon className='h-3 w-3 mr-1' />
-															<span className='text-xs whitespace-nowrap'>Copy URL</span>
-														</div>
-													</button>
+										<div>
+											<div className='marker-popup-content-container text-left pb-2'>
+												<div className='w-full flex justify-between items-center'>
+													<div className='text-lg font-bold mr-3'>{marker.label}</div>
+													<div>
+														<button
+															className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-sm text-gray-800 border focus:outline-none active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray active:bg-gray-300"
+															type="button"
+															onClick={() => onClickCopyMarkerUrl(marker.id)}
+														>
+															<div className="flex items-center whitespace-nowrap">
+																<LinkIcon className='h-3 w-3 mr-1' />
+																<span className='text-xs whitespace-nowrap'>Copy URL</span>
+															</div>
+														</button>
+													</div>
+												</div>
+												<div className='max-h-24 overflow-y-auto mt-4'>
+													{marker.description}
 												</div>
 											</div>
-
-											<hr className='mt-2 mb-3' />
-
-											<div className='max-h-24 overflow-y-auto mt-2'>
-												{marker.description}
+											<div className='marker-popup-editor-controls-container'>
+												<div className='text-xs text-black flex-0'>Editor Controls</div>
+												<MarkerPopupControls
+													marker={marker}
+													setIsRepositioningMarker={setIsRepositioningMarker}
+													deleteMarker={deleteMarker}
+													setActiveClickListener={setActiveClickListener}
+													confirmDeleteMarkerTooltipIsOpen={confirmDeleteMarkerTooltipIsOpen}
+													setConfirmDeleteMarkerTooltipIsOpen={setConfirmDeleteMarkerTooltipIsOpen}
+													onClickEditMarker={() => onClickEditMarker(marker)}
+												/>
 											</div>
-											<hr className='mt-5' />
-											<MarkerPopupControls
-												marker={marker}
-												setIsRepositioningMarker={setIsRepositioningMarker}
-												deleteMarker={deleteMarker}
-												setActiveClickListener={setActiveClickListener}
-												confirmDeleteMarkerTooltipIsOpen={confirmDeleteMarkerTooltipIsOpen}
-												setConfirmDeleteMarkerTooltipIsOpen={setConfirmDeleteMarkerTooltipIsOpen}
-											/>
 										</div>
 									</Popup>
 								}
@@ -220,7 +232,7 @@ const MapViewer = () => {
 										<ZoomOut className='h-8 w-8' />
 									</button>
 									<TippyTooltip
-										html={<div className='p-2'>Save current Zoom/Pan as default</div>}
+										html={<div className='p-2 text-xs text-black'>Set current Pan/Zoom as default view</div>}
 										position="right"
 										trigger='mouseenter'
 										arrow
@@ -251,7 +263,7 @@ const MapViewer = () => {
 								{/* Marker Controls */}
 								<div className='flex flex-col text-gray-400 text-center'>
 									<TippyTooltip
-										html={<div className='p-2'>New Marker</div>}
+										html={<div className='p-2 text-xs text-black'>New Marker</div>}
 										position="right"
 										trigger='mouseenter'
 										arrow
@@ -264,7 +276,7 @@ const MapViewer = () => {
 									</TippyTooltip>
 									<TippyTooltip
 										html={
-											<div className='p-2'>
+											<div className='p-2 text-xs text-black'>
 												{showMarkers ? 'Hide Markers' : 'Show Markers'}
 											</div>
 										}

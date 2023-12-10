@@ -7,7 +7,7 @@ import Select from 'react-select'
 import _ from 'lodash';
 import IconSizeRadio from './IconSizeRadio';
 
-const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, deleteMarker }) => {
+const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirmCreateMarker, deleteMarker }) => {
   
 	const handleInputChange = (e, inputId) => {
 		let newFormValues = _.cloneDeep(formValues);
@@ -22,17 +22,19 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 	}
 	
 	const onClose = () => {
-		deleteMarker('TEMP_ID');
+		if (creatingMarker?.id === 'TEMP_ID') {
+			deleteMarker('TEMP_ID');
+		}
 		setCreatingMarker(null);
 		cleanupForm();
 	}
 
 	const cleanupForm = () => {
-		setFormValues(defaultFormValues);
+		setFormValues(emptyFormValues);
 	}
 
-	const onConfirmClick = () => {
-		const newMarker = {
+	const onConfirmClick = () => {		
+		let newMarker = {
 			...formValues,
 			tooltip: formValues.label,
 			description: formValues.description,
@@ -51,9 +53,10 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 					: popupAnchors[formValues.iconProfile]
 			}),
 			pos: creatingMarker.pos,
-			id: nanoid(),
-		};
-		onConfirm(newMarker);
+			id: creatingMarker?.id === 'TEMP_ID' ? nanoid() : creatingMarker.id
+		}
+		
+		onConfirmCreateMarker({newMarker: newMarker, idToDelete: creatingMarker.id});
 		cleanupForm();
 	}
 
@@ -80,8 +83,8 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 		default: [0,-18],
 		large: [0,-24],
 	};
-
-	const [formValues, setFormValues] = useState({
+	
+	const initialFormValues = {
 		label: '',
 		description: '',
 		popup: '',
@@ -101,7 +104,9 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 				</div>
 			)
 		}
-	});
+	};
+
+	const [formValues, setFormValues] = useState(initialFormValues);
 
 	const iconOption = ({id, optionValue, label, pinpointAnchor}) => {
 		return {
@@ -120,6 +125,11 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 			)
 		}
 	}
+
+	const getIconIdFromIconCdnUrl = url => {
+		const urlParams = new URLSearchParams(url);
+		return urlParams.get('id');
+	};
 	
 	const genericOptions = [
 		iconOption({id: 'Sk4BAluINF9y', optionValue: 'marker', label: 'Default', pinpointAnchor: true}),
@@ -147,7 +157,25 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 		iconOption({id: 'K18A1WRGEfQO', optionValue: 'treasure', label: 'Treasure'}),
 		iconOption({id: '6GGp079FpE32', optionValue: 'vendor', label: 'Vendor'}),
 	];
-	
+
+	const allIconOptions = [...genericOptions, ...interiorOptions, ...rpgOptions];
+
+	/* If editing existing marker */
+	if (creatingMarker && creatingMarker.id !== 'TEMP_ID' && formValues?.label === '') {
+		const existingIconDetails = creatingMarker.icon?.options;
+		const correspondingSelectOption = allIconOptions.find(iconOption => iconOption.id === getIconIdFromIconCdnUrl(existingIconDetails.iconUrl));
+		const newEditFormValues = {
+			label: creatingMarker.label,
+			description: creatingMarker.description,
+			popup: creatingMarker.popup,
+			iconProfile: creatingMarker.iconProfile,
+			icon: correspondingSelectOption,
+		};
+		
+		setFormValues(newEditFormValues);
+	}
+
+
 	const groupedOptions = [
 		{
 			label: 'Generic',
@@ -189,7 +217,7 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 		</div>
 	);
 
-	const defaultFormValues = {
+	const emptyFormValues = {
 		label: '',
 		popup: '',
 		description: '',
@@ -237,15 +265,21 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 						<Label className="mt-4">
 							<span className='text-gray-200'>Icon</span>
 							<div className='text-black mt-1'>
-								<Select
-									options={groupedOptions}
-									onChange={o => handleIconOptionSelect(o)}
-									defaultValue={groupedOptions[0].options[0]}
-									isSearchable={true}
-									className="icon-select-container"
-									classNamePrefix="icon-select"
-									formatGroupLabel={formatGroupLabel}
-								/>
+								{((creatingMarker?.id === 'TEMP_ID') || (creatingMarker && creatingMarker.id !== 'TEMP_ID' && formValues.icon.value)) &&
+									<Select
+										options={groupedOptions}
+										onChange={o => handleIconOptionSelect(o)}
+										defaultValue={
+											creatingMarker?.id !== 'TEMP_ID' && creatingMarker?.icon
+												? formValues.icon
+												: groupedOptions[0].options[0]
+										}
+										isSearchable={true}
+										className="icon-select-container"
+										classNamePrefix="icon-select"
+										formatGroupLabel={formatGroupLabel}
+									/>
+								}
 							</div>
 						</Label>
 

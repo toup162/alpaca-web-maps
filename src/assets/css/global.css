@@ -229,6 +229,7 @@ div.react-switch-selector-option {
 .leaflet-popup-content-wrapper button.marker-popup-button {
 	color: #000;
 	border-color: #c7c7c7;
+	background: #fff;
 }
 
 .leaflet-tooltip-pane {
@@ -258,3 +259,29 @@ div.react-switch-selector-option {
 .whitespace-nowrap {
 	white-space: nowrap;
 }
+
+.fullscreen-map .leaflet-popup-content {
+	margin: 0px;
+}
+
+.fullscreen-map .leaflet-popup-content .marker-popup-content-container,
+.fullscreen-map .leaflet-popup-content .marker-popup-editor-controls-container {
+	padding: 13px 19px 19px 19px;
+}
+
+.fullscreen-map .leaflet-popup-content-wrapper {
+	background: #ebebebe0;
+}
+
+.fullscreen-map .leaflet-popup-content .marker-popup-content-container {
+	background: #fff;
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+}
+
+.fullscreen-map .leaflet-popup-content .marker-popup-editor-controls-container {
+	border: 3px dashed #c1c1c1;
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 12px;
+}
+
