@@ -35,6 +35,7 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 		const newMarker = {
 			...formValues,
 			tooltip: formValues.label,
+			description: formValues.description,
 			popup: formValues.label,
 			icon: new Icon ({
 				iconUrl: `https://img.icons8.com/?size=50&id=${formValues.icon.id}&format=png`,
@@ -82,6 +83,7 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 
 	const [formValues, setFormValues] = useState({
 		label: '',
+		description: '',
 		popup: '',
 		iconProfile: 'default',
 		icon: {
@@ -190,6 +192,7 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 	const defaultFormValues = {
 		label: '',
 		popup: '',
+		description: '',
 		icon: iconOption({id: 'Sk4BAluINF9y', optionValue: 'marker', label: 'Default', pinpointAnchor: true}),
 		iconProfile: 'default'
 	}
@@ -217,6 +220,17 @@ const CreateMarkerModal = ({ creatingMarker, setCreatingMarker, onConfirm, delet
 								placeholder="Label text"
 								onChange={e => handleInputChange(e, 'label')}
 								value={formValues.label}
+							/>
+						</Label>
+
+						<Label className='mt-4'>
+							<span className='text-gray-200'>Description</span>
+							<Input
+								id='description'
+								className="mt-1 placeholder-gray-500"
+								placeholder="Description text"
+								onChange={e => handleInputChange(e, 'description')}
+								value={formValues.description}
 							/>
 						</Label>
 						
