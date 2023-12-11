@@ -1,4 +1,4 @@
-import { Icon } from 'leaflet';
+import L, { Icon } from 'leaflet';
 import _ from 'lodash'
 import React, { useState, useMemo, useEffect } from 'react'
 
@@ -12,9 +12,15 @@ export const UserLocalProvider = ({ children }) => {
 	parsedUserLocal?.maps?.forEach(map => {
 		/* factory for parsed JSON of marker icons into Icon objects */
 		map.markers?.forEach(marker => {
-			marker.icon = new Icon ({
-				...marker.icon.options
-			})
+			if (!marker.type || marker.type === 'marker') {
+				marker.icon = new Icon ({
+					...marker.icon.options
+				})
+			} else if (marker.type === 'label') {
+				marker.icon = new L.divIcon({
+					...marker.icon.options,
+				})
+			}
 		})
 	});
 

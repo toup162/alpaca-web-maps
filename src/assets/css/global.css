@@ -286,3 +286,14 @@ div.react-switch-selector-option {
 	border-bottom-right-radius: 12px;
 }
 
+.leaflet-tooltip.map-label {
+	padding: 3px 6px;
+	border: 2px solid #fff;
+	border-radius: 5px;
+}
+
+.color-picker-preview {
+	width:15px;
+	height:15px;
+	border:1px solid black;
+}

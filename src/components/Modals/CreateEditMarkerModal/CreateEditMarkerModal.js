@@ -41,6 +41,7 @@ const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker
 			tooltip: formValues.label,
 			description: formValues.description,
 			popup: formValues.label,
+			type: 'marker',
 			icon: new Icon ({
 				iconUrl: `https://img.icons8.com/?size=50&id=${formValues.icon.id}&format=png`,
 				iconSize: iconSizes[formValues.iconProfile],

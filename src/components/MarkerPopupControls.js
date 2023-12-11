@@ -50,7 +50,10 @@ const MarkerPopupControls = ({
 				html={
 					<div className='p-2'>
 						<div>Really Delete?</div>
-						<Button size='small' layout='outline' className='mr-2 border-red-600 bg-red-600 active:bg-red-800' onClick={() => deleteMarker(marker.id)}>
+						<Button size='small' layout='outline' className='mr-2 border-red-600 bg-red-600 active:bg-red-800' onClick={() => {
+							deleteMarker(marker.id);
+							setConfirmDeleteMarkerTooltipIsOpen(false);
+						}}>
 							<div className='text-white flex'>
 								<span className='mr-2'>
 									<TrashMiniIcon />
