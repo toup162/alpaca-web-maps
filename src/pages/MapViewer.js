@@ -20,6 +20,8 @@ import toast from 'react-hot-toast';
 import { LinkIcon } from '../icons';
 import AddLabel from '../icons/base64/addlabel';
 import CreateEditLabelModal from '../components/Modals/CreateEdiLabelModal/CreateEditLabelModal';
+import HideLabel from '../icons/base64/hidelabel';
+import ShowLabel from '../icons/base64/showlabel';
 
 const ADD_MARKER_CLICK_LISTENER = 'ADD_MARKER_CLICK_LISTENER';
 const ADD_LABEL_CLICK_LISTENER = 'ADD_LABEL_CLICK_LISTENER';
@@ -373,8 +375,8 @@ const MapViewer = () => {
 										>
 											<button onClick={() => setShowLabels(!showLabels)} color='inherit' layout='outline' className={`${!showLabels && 'bg-red-300 '} rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray`}> 
 												{ showLabels 
-														? <HideMarker className='h-8 w-8' />
-														: <ShowMarker className='h-8 w-8' />
+														? <HideLabel className='h-8 w-8' />
+														: <ShowLabel className='h-8 w-8' />
 												}
 											</button>
 										</TippyTooltip>
