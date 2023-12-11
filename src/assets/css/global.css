@@ -267,6 +267,7 @@ div.react-switch-selector-option {
 .fullscreen-map .leaflet-popup-content .marker-popup-content-container,
 .fullscreen-map .leaflet-popup-content .marker-popup-editor-controls-container {
 	padding: 13px 19px 19px 19px;
+	min-width: 200px;
 }
 
 .fullscreen-map .leaflet-popup-content-wrapper {
@@ -283,6 +284,5 @@ div.react-switch-selector-option {
 	border: 3px dashed #c1c1c1;
 	border-bottom-left-radius: 12px;
 	border-bottom-right-radius: 12px;
-	min-width: 200px;
 }
 

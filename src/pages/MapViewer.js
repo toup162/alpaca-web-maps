@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 
 import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent } from 'react-leaflet'
-import { useParams } from 'react-router-dom/cjs/react-router-dom';
+import { useParams, useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { UserLocalContext } from '../context/UserLocalContext';
 import { Icon } from 'leaflet';
 import CreateEditMarkerModal from '../components/Modals/CreateEditMarkerModal/CreateEditMarkerModal';
@@ -25,6 +25,7 @@ const MAP_ID_PLACEHOLDER = 'TEMP_ID';
 
 const MapViewer = () => {
 	const { mapId, markerId: markerIdFromUrl } = useParams();
+	const history = useHistory();
 	const { userLocal, setMarkersByMapId, updateMap } = useContext(UserLocalContext);
 	const mapDetails = userLocal?.maps?.find(m => m.mapId === mapId);
 	const markers = mapDetails?.markers || [];
@@ -80,6 +81,8 @@ const MapViewer = () => {
 		setMarkersByMapId(mapId, [
 			...markers.filter(marker => marker.id !== id)
 		]);
+		/* If the marker we're deleting is the one in the browser's URL path, remove from the path */
+		markerIdFromUrl && history.replace({ pathname: `/app/map/${mapId}` })
 	}
 
 	const onConfirmCreateEditMarker = ({newMarker, idToDelete}) => {
