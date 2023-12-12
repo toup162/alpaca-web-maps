@@ -5,29 +5,14 @@ import { useParams, useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { UserLocalContext } from '../context/UserLocalContext';
 import L, { Icon } from 'leaflet';
 import CreateEditMarkerModal from '../components/Modals/CreateEditMarkerModal/CreateEditMarkerModal';
-import { Card, CardBody } from '@windmill/react-ui';
 import MouseTracker from '../components/MouseTracker';
-import { Tooltip as TippyTooltip } from 'react-tippy';
-import Control from 'react-leaflet-custom-control'
 import MarkerPopupControls from '../components/MarkerPopupControls';
-import AddMarker from '../icons/base64/addmarker';
-import HideMarker from '../icons/base64/hidemarker';
-import ZoomIn from '../icons/base64/zoomin';
-import ZoomOut from '../icons/base64/zoomout';
-import ShowMarker from '../icons/base64/showmarker';
-import MapFavorite from '../icons/base64/mapfavorite';
 import toast from 'react-hot-toast';
 import { LinkIcon } from '../icons';
-import AddLabel from '../icons/base64/addlabel';
 import CreateEditLabelModal from '../components/Modals/CreateEdiLabelModal/CreateEditLabelModal';
-import HideLabel from '../icons/base64/hidelabel';
-import ShowLabel from '../icons/base64/showlabel';
 import GlobeWithMarker from '../icons/base64/globewithmarker';
-
-const ADD_MARKER_CLICK_LISTENER = 'ADD_MARKER_CLICK_LISTENER';
-const ADD_LABEL_CLICK_LISTENER = 'ADD_LABEL_CLICK_LISTENER';
-const REPOSITION_MARKER_CLICK_LISTENER = 'REPOSITION_MARKER_CLICK_LISTENER';
-const MAP_ID_PLACEHOLDER = 'TEMP_ID';
+import MapControls from '../components/MapControls';
+import C from '../utils/constants';
 
 const MapViewer = () => {
 	const { mapId, markerId: markerIdFromUrl } = useParams();
@@ -48,11 +33,11 @@ const MapViewer = () => {
 	const MapControlHandler = () => {
 		
 		useMapEvent('click', e => {
-			if (activeClickListener === ADD_MARKER_CLICK_LISTENER) {
+			if (activeClickListener === C.ADD_MARKER_CLICK_LISTENER) {
 				/* Create a temporary marker that can be seen on the map while we create the real marker in the modal*/
 				const placeholderMarker = {
 					pos: e.latlng,
-					id: MAP_ID_PLACEHOLDER,
+					id: 'TEMP_ID',
 					type: 'marker',
 					icon: new Icon ({
 						iconUrl: `https://img.icons8.com/?size=50&id=Sk4BAluINF9y&format=png`,
@@ -68,7 +53,7 @@ const MapViewer = () => {
 				setCreatingEditingMarker(placeholderMarker);
 				setActiveClickListener(null);
 
-			} else if (activeClickListener === ADD_LABEL_CLICK_LISTENER) {
+			} else if (activeClickListener === C.ADD_LABEL_CLICK_LISTENER) {
 				
 				const placeholderLabel = {
 					pos: e.latlng,
@@ -91,7 +76,7 @@ const MapViewer = () => {
 				setCreatingEditingLabel(placeholderLabel);
 				setActiveClickListener(null);
 
-			} else if (activeClickListener === REPOSITION_MARKER_CLICK_LISTENER) {
+			} else if (activeClickListener === C.REPOSITION_MARKER_CLICK_LISTENER) {
 				setMarkersByMapId(mapId, [
 					...markers,
 					{
@@ -195,9 +180,9 @@ const MapViewer = () => {
 		}
 	}
 
-	const mouseTrackerVisible = activeClickListener === REPOSITION_MARKER_CLICK_LISTENER
-		|| activeClickListener === ADD_MARKER_CLICK_LISTENER
-		|| activeClickListener === ADD_LABEL_CLICK_LISTENER;
+	const mouseTrackerVisible = activeClickListener === C.REPOSITION_MARKER_CLICK_LISTENER
+		|| activeClickListener === C.ADD_MARKER_CLICK_LISTENER
+		|| activeClickListener === C.ADD_LABEL_CLICK_LISTENER;
 	
 	return (
 		<div>
@@ -222,7 +207,7 @@ const MapViewer = () => {
 			/>
 			
 			{mapDetails &&
-			<div className={isRepositioningMarker || activeClickListener === ADD_MARKER_CLICK_LISTENER || activeClickListener === ADD_LABEL_CLICK_LISTENER ? 'positioning-marker' : ''}>
+			<div className={isRepositioningMarker || activeClickListener === C.ADD_MARKER_CLICK_LISTENER || activeClickListener === C.ADD_LABEL_CLICK_LISTENER ? 'positioning-marker' : ''}>
 				<MapContainer
 					center={[Number(mapDetails.centerXCoord), Number(mapDetails.centerYCoord)]}
 					zoom={Number(mapDetails.initialZoom)}
@@ -250,7 +235,7 @@ const MapViewer = () => {
 								position={marker.pos}
 								{...(marker.icon && { icon: marker.icon } )}
 							>
-								{marker.tooltip && activeClickListener !== REPOSITION_MARKER_CLICK_LISTENER &&
+								{marker.tooltip && activeClickListener !== C.REPOSITION_MARKER_CLICK_LISTENER &&
 									<Tooltip>
 										{marker.tooltip}
 									</Tooltip>
@@ -315,126 +300,18 @@ const MapViewer = () => {
 							</Marker>
 						)
 					})}
-					<Control prepend position='topleft' >
-						<Card colored className='bg-gray-700'>
-							<CardBody>
-								{/* Zoom Controls */}
-								<div className='flex flex-col text-gray-400 text-center'>
-									<button onClick={() => mapRef.setZoom(mapRef.getZoom() + 1)} color='inherit' layout='outline' className='rounded-b-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
-										<ZoomIn className='h-8 w-8'  />
-									</button>
-									<button onClick={() => mapRef.setZoom(mapRef.getZoom() - 1)} color='inherit' layout='outline' className='align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
-										<ZoomOut className='h-8 w-8' />
-									</button>
-									<TippyTooltip
-										html={<div className='p-2 text-xs text-black'>Set current Pan/Zoom as default view</div>}
-										position="right"
-										trigger='mouseenter'
-										arrow
-										theme='light'
-									>
-										<button
-											color='inherit'
-											layout='outline'
-											className='rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray' 
-											onClick={() => {
-												updateMap({
-													...mapDetails,
-													center: mapRef.getBounds().getCenter(),
-													centerXCoord: mapRef.getBounds().getCenter()?.lat,
-													centerYCoord: mapRef.getBounds().getCenter()?.lng,
-													initialZoom: mapRef.getZoom()
-												});
-												toast.success('Saved current view as default!', {duration: 3000});
-											}}
-										>
-											<MapFavorite className='h-8 w-8' />
-										</button>
-									</TippyTooltip>
-								</div>
-
-								<hr className='my-4 border-gray-600' />
-
-								{/* Marker Controls */}
-								<div className='flex flex-col text-gray-400 text-center'>
-									<TippyTooltip
-										html={<div className='p-2 text-xs text-black'>New Marker</div>}
-										position="right"
-										trigger='mouseenter'
-										arrow
-										theme='light'
-										disabled={activeClickListener === ADD_MARKER_CLICK_LISTENER}
-									>
-										<button onClick={() => setActiveClickListener(ADD_MARKER_CLICK_LISTENER)} color='inherit' layout='outline' className='rounded-b-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
-											<AddMarker className='h-8 w-8' />
-										</button>
-									</TippyTooltip>
-									<div className='flex flex-col text-gray-400 text-center'>
-										<TippyTooltip
-											html={<div className='p-2 text-xs text-black'>New Label</div>}
-											position="right"
-											trigger='mouseenter'
-											arrow
-											theme='light'
-											disabled={activeClickListener === ADD_LABEL_CLICK_LISTENER}
-										>
-											<button onClick={() => setActiveClickListener(ADD_LABEL_CLICK_LISTENER)} color='inherit' layout='outline' className='rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray'> 
-												<AddLabel className='h-8 w-8' />
-											</button>
-										</TippyTooltip>
-									</div>
-									
-								</div>
-
-								<hr className='my-4 border-gray-600' />
-
-								{/* Label Controls */}
-								<div className='flex flex-col text-gray-400 text-center'>
-									<TippyTooltip
-											html={
-												<div className='p-2 text-xs text-black'>
-													{showMarkers ? 'Hide Markers' : 'Show Markers'}
-												</div>
-											}
-											position="right"
-											trigger='mouseenter'
-											arrow
-											theme='light'
-										>
-											<button onClick={() => setShowMarkers(!showMarkers)} color='inherit' layout='outline' className={`${!showMarkers && 'bg-red-300 '} rounded-b-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray`}> 
-												{ showMarkers 
-														? <HideMarker className='h-8 w-8' />
-														: <ShowMarker className='h-8 w-8' />
-												}
-											</button>
-										</TippyTooltip>
-									</div>
-									<div className='flex flex-col text-gray-400 text-center'>
-										<TippyTooltip
-											html={
-												<div className='p-2 text-xs text-black'>
-													{showLabels ? 'Hide Labels' : 'Show Labels'}
-												</div>
-											}
-											position="right"
-											trigger='mouseenter'
-											arrow
-											theme='light'
-										>
-											<button onClick={() => setShowLabels(!showLabels)} color='inherit' layout='outline' className={`${!showLabels && 'bg-red-300 '} rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray`}> 
-												{ showLabels 
-														? <HideLabel className='h-8 w-8' />
-														: <ShowLabel className='h-8 w-8' />
-												}
-											</button>
-										</TippyTooltip>
-									</div>
-
-								
-							</CardBody>
-						</Card>
-					</Control>
-
+					
+					<MapControls
+						mapRef={mapRef}
+						mapDetails={mapDetails}
+						updateMap={updateMap}
+						activeClickListener={activeClickListener}
+						setActiveClickListener={setActiveClickListener}
+						showMarkers={showMarkers}
+						setShowMarkers={setShowMarkers}
+						setShowLabels={setShowLabels}
+						showLabels={showLabels}
+					/>
 					<MapControlHandler />
 				</MapContainer>
 			</div>

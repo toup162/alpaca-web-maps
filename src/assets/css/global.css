@@ -319,3 +319,61 @@ div.react-switch-selector-option {
 	-webkit-user-select: none;
 	-ms-user-select: none;
 }
+
+.hue-rotate-280 {
+	filter: hue-rotate(280deg);
+}
+
+.map-search-control-container {
+	margin-right: 1rem;
+	transition: 0.5s;
+	width:auto;
+	position: relative;
+}
+
+.search-togle-card {
+	min-width: 82px;
+
+}
+
+.map-search-control-container input {
+	font-size: 26px;
+}
+
+.map-search-control {
+	min-height: 82px;
+}
+
+
+.map-search-control > div {
+	overflow: visible;
+	min-width: 300px;
+	color: gray;
+}
+
+@media (min-width: 1024px) {
+	.map-search-control {
+		position: fixed;
+		left: calc(100vw/2 - 64px);
+	}
+	.map-search-control > div {
+		min-width: 400px;
+	}
+}
+
+.map-search-control-card {
+	padding: 0!important;
+}
+
+.icon-select__input-container,
+.icon-select__placeholder {
+	font-size: 32px;
+}
+
+.icon-select-container {
+	padding: 0.5rem;
+}
+
+.icon-select__input {
+	width: unset!important;
+}

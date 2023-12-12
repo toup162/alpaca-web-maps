@@ -4,6 +4,7 @@ import { ArrowsPointingOutMiniIcon, TrashMiniIcon } from '../icons';
 import PencilMiniIcon from '../icons/base64/pencilmini';
 import { Tooltip as TippyTooltip } from 'react-tippy';
 import _ from 'lodash';
+import C from '../utils/constants';
 
 const MarkerPopupControls = ({
 	marker,
@@ -23,7 +24,7 @@ const MarkerPopupControls = ({
 				onMouseDown={() => {
 					setIsRepositioningMarker(_.cloneDeep(marker));
 					deleteMarker(marker.id);
-					setActiveClickListener('REPOSITION_MARKER_CLICK_LISTENER');
+					setActiveClickListener(C.REPOSITION_MARKER_CLICK_LISTENER);
 				}}
 			>
 				<div className='transform rotate-45'><ArrowsPointingOutMiniIcon /></div>
