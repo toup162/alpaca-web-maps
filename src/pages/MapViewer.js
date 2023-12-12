@@ -22,6 +22,7 @@ import AddLabel from '../icons/base64/addlabel';
 import CreateEditLabelModal from '../components/Modals/CreateEdiLabelModal/CreateEditLabelModal';
 import HideLabel from '../icons/base64/hidelabel';
 import ShowLabel from '../icons/base64/showlabel';
+import GlobeWithMarker from '../icons/base64/globewithmarker';
 
 const ADD_MARKER_CLICK_LISTENER = 'ADD_MARKER_CLICK_LISTENER';
 const ADD_LABEL_CLICK_LISTENER = 'ADD_LABEL_CLICK_LISTENER';
@@ -126,16 +127,18 @@ const MapViewer = () => {
 			setCreatingEditingMarker(null);
 			/* Just in case 'Hide Markers' is active, set it to show markers */
 			!showMarkers && setShowMarkers(true);
+			toast.success(
+				idToDelete === 'TEMP_ID' ? 'Marker created!' : 'Marker updated!',
+				{ duration: 2500 }
+			);
 		} else {
 			setCreatingEditingLabel(null);
 			!showLabels && setShowLabels(true);
-		}
-
-		toast.success(
-			idToDelete === 'TEMP_ID' ? 'Label created!' : 'Label updated!',
-			{ duration: 2500 }
-		);
-		
+			toast.success(
+				idToDelete === 'TEMP_ID' ? 'Label created!' : 'Label updated!',
+				{ duration: 2500 }
+			);
+		}		
 	}
 
 	/* If the marker ID from the URL is a real marker */
@@ -170,6 +173,26 @@ const MapViewer = () => {
 		toast.success(`${type === 'label' ? 'Label' : 'Marker'} URL copied to clipboard!`, {
 			duration: 4000
 		});
+	}
+
+	const onClickVisitConnection = url => {
+		try {
+			const urlObject = new URL(url);
+			if (urlObject?.pathname) {
+				/* If it is a link to another map, navigate the browser there */
+				if (!urlObject.pathname.includes(mapDetails.mapId)) {
+					history.push(urlObject.pathname);
+				} else {
+					const destinationMarker = markers.find(m => m.id === urlObject.pathname.split('/').pop());
+					mapRef.flyTo(destinationMarker.pos, mapDetails.maxZoom);
+				}
+			}
+				
+		} catch (error) {
+			toast.error('Invalid URL', {
+				duration: 4000
+			})
+		}
 	}
 
 	const mouseTrackerVisible = activeClickListener === REPOSITION_MARKER_CLICK_LISTENER
@@ -208,6 +231,7 @@ const MapViewer = () => {
 					zoomControl={false}
 					className='fullscreen-map'
 					whenReady={onMapContainerReady}
+					key={mapId}
 				>
 					<TileLayer
 						attribution='test'
@@ -238,6 +262,26 @@ const MapViewer = () => {
 											<div className='marker-popup-content-container text-left pb-2'>
 												<div className='w-full flex justify-between items-center'>
 													<div className='text-lg font-bold mr-3'>{marker.label}</div>
+													
+												</div>
+												<div className='max-h-24 overflow-y-auto mt-2 mb-5'>
+													{marker.description}
+												</div>
+												<div className='flex justify-end items-center'>
+													{ marker.mapLinkUrl &&
+														<div className='mr-2'>
+															<button
+																className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-sm text-gray-800 border focus:outline-none active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray active:bg-gray-300"
+																type="button"
+																onClick={() => onClickVisitConnection(marker.mapLinkUrl)}
+															>
+																<div className="flex items-center whitespace-nowrap">
+																	<GlobeWithMarker className='h-5 w-5 mr-1' />
+																	<span className='text-xs whitespace-nowrap pr-4'>Visit Connection</span>
+																</div>
+															</button>
+														</div>
+													}
 													<div>
 														<button
 															className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-sm text-gray-800 border focus:outline-none active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray active:bg-gray-300"
@@ -250,9 +294,7 @@ const MapViewer = () => {
 															</div>
 														</button>
 													</div>
-												</div>
-												<div className='max-h-24 overflow-y-auto mt-4'>
-													{marker.description}
+														
 												</div>
 											</div>
 											<div className='marker-popup-editor-controls-container'>

@@ -42,6 +42,7 @@ const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker
 			description: formValues.description,
 			popup: formValues.label,
 			type: 'marker',
+			mapLinkUrl: formValues.mapLinkUrl,
 			icon: new Icon ({
 				iconUrl: `https://img.icons8.com/?size=50&id=${formValues.icon.id}&format=png`,
 				iconSize: iconSizes[formValues.iconProfile],
@@ -92,6 +93,7 @@ const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker
 		description: '',
 		popup: '',
 		iconProfile: 'default',
+		mapLinkUrl: '',
 		icon: {
 			value: 'marker',
 			id: 'Sk4BAluINF9y',
@@ -111,6 +113,16 @@ const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker
 
 	const [formValues, setFormValues] = useState(initialFormValues);
 
+	const iconImageElement = ({iconCdnId, alt, hue}) => {
+		return (
+			<img
+				src={`https://img.icons8.com/?size=50&id=${iconCdnId}&format=png`}
+				alt={alt}
+				className='mr-2 h-6'
+				style={hue ? {filter: `hue-rotate(${hue}deg)`} : undefined}
+			/>
+		);
+	}
 	const iconOption = ({id, optionValue, label, pinpointAnchor}) => {
 		return {
 			value: optionValue,
@@ -118,11 +130,7 @@ const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker
 			pinpointAnchor: pinpointAnchor,
 			label: (
 				<div className='flex items-center'>
-					<img
-						src={`https://img.icons8.com/?size=50&id=${id}&format=png`}
-						alt={optionValue}
-						className='mr-2 h-6'
-					/>
+					{iconImageElement({iconCdnId: id, alt: optionValue})}
 					<div>{label}</div>
 				</div>
 			)
@@ -166,13 +174,14 @@ const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker
 	/* If editing existing marker */
 	if (creatingEditingMarker && !isCreatingNewMarker && formValues?.label === '') {
 		const existingIconDetails = creatingEditingMarker.icon?.options;
-		const correspondingSelectOption = allIconOptions.find(iconOption => iconOption.id === getIconIdFromIconCdnUrl(existingIconDetails.iconUrl));
+		const correspondingSelectIconOption = allIconOptions.find(iconOption => iconOption.id === getIconIdFromIconCdnUrl(existingIconDetails.iconUrl));
 		const newEditFormValues = {
 			label: creatingEditingMarker.label,
 			description: creatingEditingMarker.description,
 			popup: creatingEditingMarker.popup,
 			iconProfile: creatingEditingMarker.iconProfile,
-			icon: correspondingSelectOption,
+			icon: correspondingSelectIconOption,
+			mapLinkUrl: creatingEditingMarker.mapLinkUrl
 		};
 		
 		setFormValues(newEditFormValues);
@@ -219,18 +228,17 @@ const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker
 		</div>
 	);
 
+	const formIsInvalid = () => {
+		return formValues && (!formValues?.label);
+	}
+
 	const emptyFormValues = {
 		label: '',
 		popup: '',
 		description: '',
+		mapLinkUrl: '',
 		icon: iconOption({id: 'Sk4BAluINF9y', optionValue: 'marker', label: 'Default', pinpointAnchor: true}),
 		iconProfile: 'default'
-	}
-
-	const formIsInvalid = () => {
-		return formValues && (!formValues?.label
-
-		)
 	}
 
 	return (
@@ -243,48 +251,70 @@ const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker
 
 				<ModalBody>
 					<div className="create-marker-modal-body-content px-4 pb-3 mb-8 bg-white rounded-lg dark:bg-gray-800">
-						
-						<Label className='mt-4'>
-							<span className='text-gray-200 required'>Label</span>
-							<Input
-								id='label'
-								className="mt-1 placeholder-gray-500"
-								placeholder="Label text"
-								onChange={e => handleInputChange(e, 'label')}
-								value={formValues.label}
-							/>
-						</Label>
+						<div className='flex'>
+							<div className='w-full flex-1 pr-2'>
+								<Label className='mt-4'>
+									<span className='text-gray-200 required'>Label</span>
+									<Input
+										id='label'
+										className="mt-1 placeholder-gray-500"
+										placeholder="Label text"
+										onChange={e => handleInputChange(e, 'label')}
+										value={formValues.label}
+									/>
+								</Label>
+							</div>
+							<div className='w-full flex-1'>
+								<Label className='mt-4'>
+									<span className='text-gray-200'>Description</span>
+									<Input
+										id='description'
+										className="mt-1 placeholder-gray-500"
+										placeholder="Description text"
+										onChange={e => handleInputChange(e, 'description')}
+										value={formValues.description}
+									/>
+								</Label>
+							</div>
+							
+						</div>
+
+						<div className='flex'>
+							
+							<div className='w-full flex-1'>
+								<Label className="mt-4">
+									<span className='text-gray-200'>Icon</span>
+									<div className='text-black mt-1'>
+										{((isCreatingNewMarker) || (creatingEditingMarker && !isCreatingNewMarker && formValues.icon.value)) &&
+											<Select
+												options={groupedOptions}
+												onChange={o => handleIconOptionSelect(o)}
+												defaultValue={
+													!isCreatingNewMarker && creatingEditingMarker?.icon
+														? formValues.icon
+														: groupedOptions[0].options[0]
+												}
+												isSearchable={true}
+												className="icon-select-container"
+												classNamePrefix="icon-select"
+												formatGroupLabel={formatGroupLabel}
+											/>
+										}
+									</div>
+								</Label>
+							</div>
+
+						</div>
 
 						<Label className='mt-4'>
-							<span className='text-gray-200'>Description</span>
+							<span className='text-gray-200'>Link to Map/Marker</span>
 							<Input
-								id='description'
+								id='mapLinkUrl'
 								className="mt-1 placeholder-gray-500"
-								placeholder="Description text"
-								onChange={e => handleInputChange(e, 'description')}
-								value={formValues.description}
+								placeholder="Map/Marker URL"
+								onChange={e => handleInputChange(e, 'mapLinkUrl')}
+								value={formValues.mapLinkUrl}
 							/>
-						</Label>
-						
-						<Label className="mt-4">
-							<span className='text-gray-200'>Icon</span>
-							<div className='text-black mt-1'>
-								{((isCreatingNewMarker) || (creatingEditingMarker && !isCreatingNewMarker && formValues.icon.value)) &&
-									<Select
-										options={groupedOptions}
-										onChange={o => handleIconOptionSelect(o)}
-										defaultValue={
-											!isCreatingNewMarker && creatingEditingMarker?.icon
-												? formValues.icon
-												: groupedOptions[0].options[0]
-										}
-										isSearchable={true}
-										className="icon-select-container"
-										classNamePrefix="icon-select"
-										formatGroupLabel={formatGroupLabel}
-									/>
-								}
-							</div>
 						</Label>
 
 						<IconSizeRadio
