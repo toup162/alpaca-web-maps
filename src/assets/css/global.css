@@ -297,3 +297,25 @@ div.react-switch-selector-option {
 	height:15px;
 	border:1px solid black;
 }
+
+.map-label-preview {
+	box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 3px;
+	padding: 3px 6px;
+	border: 2px solid #fff;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.map-label-preview > div {
+	text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.fullscreen-map button img {
+	-webkit-user-drag: none;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}

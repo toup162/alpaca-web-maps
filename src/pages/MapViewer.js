@@ -165,17 +165,23 @@ const MapViewer = () => {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mapRef])
 
-	const onClickCopyMarkerUrl = markerIdToCopy => {
-		navigator.clipboard.writeText(`${window.location.origin}/app/map/${mapId}/${markerIdToCopy}`);
-		toast.success('Marker URL copied to clipboard!', {
+	const onClickCopyMarkerUrl = ({id, type}) => {
+		navigator.clipboard.writeText(`${window.location.origin}/app/map/${mapId}/${id}`);
+		toast.success(`${type === 'label' ? 'Label' : 'Marker'} URL copied to clipboard!`, {
 			duration: 4000
 		});
 	}
+
+	const mouseTrackerVisible = activeClickListener === REPOSITION_MARKER_CLICK_LISTENER
+		|| activeClickListener === ADD_MARKER_CLICK_LISTENER
+		|| activeClickListener === ADD_LABEL_CLICK_LISTENER;
 	
 	return (
 		<div>
-			{(activeClickListener === REPOSITION_MARKER_CLICK_LISTENER || activeClickListener === ADD_MARKER_CLICK_LISTENER || activeClickListener === ADD_LABEL_CLICK_LISTENER)  && 
-				<MouseTracker offset={{ x: 10, y: -40 }}>Click the map to place the marker.</MouseTracker>
+			{mouseTrackerVisible && 
+				<MouseTracker offset={{ x: 10, y: -40 }}>
+					Click the map to place the {isRepositioningMarker?.type ? isRepositioningMarker.type : 'marker' }.
+				</MouseTracker>
 			}
 			
 			<CreateEditMarkerModal
@@ -236,7 +242,7 @@ const MapViewer = () => {
 														<button
 															className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-sm text-gray-800 border focus:outline-none active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray active:bg-gray-300"
 															type="button"
-															onClick={() => onClickCopyMarkerUrl(marker.id)}
+															onClick={() => onClickCopyMarkerUrl(marker)}
 														>
 															<div className="flex items-center whitespace-nowrap">
 																<LinkIcon className='h-3 w-3 mr-1' />

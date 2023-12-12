@@ -48,7 +48,7 @@ const CreateEditLabelModal = ({ creatingEditingLabel, setCreatingEditingLabel, o
 		let newMarker = {
 			pos: creatingEditingLabel.pos,
 			id: isCreatingNewLabel ? nanoid() : creatingEditingLabel.id,
-			labelText: formValues.labelText,
+			labelText: formValues.labelText?.trim(),
 			color: formValues.color,
 			type: 'label',
 			popup: 'true',
@@ -117,17 +117,38 @@ const CreateEditLabelModal = ({ creatingEditingLabel, setCreatingEditingLabel, o
 							/>
 						</Label>
 
-						<Label className='mt-4 mb-2'>
-							<span className='text-gray-200 required'>Color</span>
-						</Label>
+						<div className='flex'>
+							<div>
+								<Label className='mt-4 mb-2'>
+									<span className='text-gray-200 required'>Color</span>
+								</Label>
+								<CirclePicker
+									onChangeComplete={(color, event) => handleInputChange(color, 'color')}
+									colors={['#ffffff', '#B80000', '#DB3E00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB']}
+									color={formValues.color}
+									width='205px'
+								/>
+							</div>
 
-						<CirclePicker
-							/*color={ this.state.background }*/
-							onChangeComplete={(color, event) => handleInputChange(color, 'color')}
-							colors={['#ffffff', '#B80000', '#DB3E00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB']}
-							color={formValues.color}
-							width='205px'
-						/>
+							{formValues?.labelText?.length > 0 && formValues.labelText.trim().length > 0 &&
+								<div className='pl-4 flex-1 overflow-hidden'>
+									<Label className='mt-4 mb-2'>
+										<span className='text-gray-200'>Preview</span>
+									</Label>
+									<div className='flex'>
+										<div
+											style={{
+												background: `${formValues.color}`,
+												color: formValues.color === '#ffffff' ? '#000' : "#FFF",
+											}}
+											className="map-label-preview flex"
+										>
+												<div className='text-ellipsis'>{formValues.labelText}</div>
+										</div>
+									</div>
+								</div>
+							}	
+						</div>
 
 					</div>
 				</ModalBody>
