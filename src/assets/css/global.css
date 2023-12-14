@@ -312,7 +312,8 @@ div.react-switch-selector-option {
   overflow: hidden;
 }
 
-.fullscreen-map button img {
+.fullscreen-map button img,
+.tippy-tooltip img {
 	-webkit-user-drag: none;
 	user-select: none;
 	-moz-user-select: none;

@@ -13,6 +13,7 @@ import CreateEditLabelModal from '../components/Modals/CreateEdiLabelModal/Creat
 import GlobeWithMarker from '../icons/base64/globewithmarker';
 import MapControls from '../components/MapControls';
 import C from '../utils/constants';
+import Control from 'react-leaflet-custom-control';
 
 const MapViewer = () => {
 	const { mapId, markerId: markerIdFromUrl } = useParams();
@@ -32,6 +33,11 @@ const MapViewer = () => {
 
 	const MapControlHandler = () => {
 		
+		/*
+		useMapEvent('keydown', e => {
+			console.log(e);
+		})
+*/
 		useMapEvent('click', e => {
 			if (activeClickListener === C.ADD_MARKER_CLICK_LISTENER) {
 				/* Create a temporary marker that can be seen on the map while we create the real marker in the modal*/
@@ -89,7 +95,7 @@ const MapViewer = () => {
 				
 			}}
 		)
-
+console.log('mapControlHandler');
 		return <div />;
 	}
 
@@ -169,7 +175,7 @@ const MapViewer = () => {
 					history.push(urlObject.pathname);
 				} else {
 					const destinationMarker = markers.find(m => m.id === urlObject.pathname.split('/').pop());
-					mapRef.flyTo(destinationMarker.pos, mapDetails.maxZoom);
+					mapRef.flyTo(destinationMarker.pos, mapRef.options.maxZoom);
 				}
 			}
 				
@@ -300,19 +306,20 @@ const MapViewer = () => {
 							</Marker>
 						)
 					})}
-					
-					<MapControls
-						mapRef={mapRef}
-						mapDetails={mapDetails}
-						updateMap={updateMap}
-						activeClickListener={activeClickListener}
-						setActiveClickListener={setActiveClickListener}
-						showMarkers={showMarkers}
-						setShowMarkers={setShowMarkers}
-						setShowLabels={setShowLabels}
-						showLabels={showLabels}
-					/>
-					<MapControlHandler />
+					<Control prepend position="topleft">
+						<MapControls
+							mapRef={mapRef}
+							mapDetails={mapDetails}
+							updateMap={updateMap}
+							activeClickListener={activeClickListener}
+							setActiveClickListener={setActiveClickListener}
+							showMarkers={showMarkers}
+							setShowMarkers={setShowMarkers}
+							setShowLabels={setShowLabels}
+							showLabels={showLabels}
+						/>
+						<MapControlHandler />
+					</Control>
 				</MapContainer>
 			</div>
 			}

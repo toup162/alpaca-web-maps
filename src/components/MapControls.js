@@ -7,10 +7,9 @@ import ShowMarker from '../icons/base64/showmarker';
 import AddLabel from '../icons/base64/addlabel';
 import HideLabel from '../icons/base64/hidelabel';
 import ShowLabel from '../icons/base64/showlabel';
-import SearchIcon from '../icons/base64/search';
 import toast from 'react-hot-toast';
 import C from '../utils/constants';
-import { BookmarkIcon, FunnelIcon, PlusIcon, ZoomInIcon, ZoomOutIcon } from '../icons';
+import { BookmarkIcon, FunnelIcon, PlusIcon, ZoomInIcon, ZoomOutIcon, SearchIcon } from '../icons';
 
 const MapControls = ({
 		mapRef,
@@ -31,6 +30,7 @@ const MapControls = ({
 
 	useEffect(() => {
 		mapSearchInputRef?.current?.focus();
+		console.log('testtest');
 	}, [isSearchCardExpanded])
 
 	const handleSearchChange = event => {
@@ -74,7 +74,7 @@ const MapControls = ({
 									layout="outline"
 									className="flex-0 align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray"
 								>
-									<SearchIcon className="h-8 w-8" />
+									<SearchIcon className="h-8 w-8 text-white" />
 								</button>
 						</CardBody>
 					</Card>
@@ -316,7 +316,7 @@ const MapControls = ({
 											color="inherit"
 											layout="outline"
 											className={
-												`${ (!showLabels || !showMarkers) && "bg-red-300 "}rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray`
+												`${ (!showLabels || !showMarkers) ? "bg-red-300 " : ''}rounded-t-none align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none p-2 rounded-lg text-sm text-gray-600 border-gray-600 border focus:outline-none active:bg-gray-300 hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:shadow-outline-gray`
 											}
 
 									>
