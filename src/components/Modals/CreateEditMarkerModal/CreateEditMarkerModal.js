@@ -9,7 +9,7 @@ import IconSizeRadio from './IconSizeRadio';
 
 const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker, onConfirmCreateEditMarker, deleteMarker }) => {
   
-	const isCreatingNewMarker = (!creatingEditingMarker || creatingEditingMarker?.id === 'TEMP_ID');
+	const isCreatingNewMarker = (creatingEditingMarker?.id === 'TEMP_ID');
 
 	const handleInputChange = (e, inputId) => {
 		let newFormValues = _.cloneDeep(formValues);
@@ -27,8 +27,10 @@ const CreateEditMarkerModal = ({ creatingEditingMarker, setCreatingEditingMarker
 		if (isCreatingNewMarker) {
 			deleteMarker('TEMP_ID');
 		}
-		setCreatingEditingMarker(null);
-		cleanupForm();
+		if (creatingEditingMarker) {
+			setCreatingEditingMarker(null);
+			cleanupForm();
+		}
 	}
 
 	const cleanupForm = () => {

@@ -32,12 +32,7 @@ const MapViewer = () => {
 	const [forceInitialMarkerPopup, setForceInitialMarkerPopup] = useState(true);
 
 	const MapControlHandler = () => {
-		
-		/*
-		useMapEvent('keydown', e => {
-			console.log(e);
-		})
-*/
+
 		useMapEvent('click', e => {
 			if (activeClickListener === C.ADD_MARKER_CLICK_LISTENER) {
 				/* Create a temporary marker that can be seen on the map while we create the real marker in the modal*/
@@ -198,20 +193,23 @@ console.log('mapControlHandler');
 				</MouseTracker>
 			}
 			
-			<CreateEditMarkerModal
-				creatingEditingMarker={creatingEditingMarker}
-				setCreatingEditingMarker={setCreatingEditingMarker}
-				deleteMarker={deleteMarker}
-				onConfirmCreateEditMarker={onConfirmCreateEditMarker}
-			/>
+			{creatingEditingMarker &&
+				<CreateEditMarkerModal
+					creatingEditingMarker={creatingEditingMarker}
+					setCreatingEditingMarker={setCreatingEditingMarker}
+					deleteMarker={deleteMarker}
+					onConfirmCreateEditMarker={onConfirmCreateEditMarker}
+				/>
+			}
 
-			<CreateEditLabelModal
-				creatingEditingLabel={creatingEditingLabel}
-				setCreatingEditingLabel={setCreatingEditingLabel}
-				deleteLabel={deleteMarker}
-				onConfirmCreateEditLabel={onConfirmCreateEditMarker}
-			/>
-			
+			{creatingEditingLabel &&
+				<CreateEditLabelModal
+					creatingEditingLabel={creatingEditingLabel}
+					setCreatingEditingLabel={setCreatingEditingLabel}
+					deleteLabel={deleteMarker}
+					onConfirmCreateEditLabel={onConfirmCreateEditMarker}
+				/>
+			}
 			{mapDetails &&
 			<div className={isRepositioningMarker || activeClickListener === C.ADD_MARKER_CLICK_LISTENER || activeClickListener === C.ADD_LABEL_CLICK_LISTENER ? 'positioning-marker' : ''}>
 				<MapContainer

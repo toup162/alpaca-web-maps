@@ -8,7 +8,7 @@ import { CirclePicker } from 'react-color';
 
 const CreateEditLabelModal = ({ creatingEditingLabel, setCreatingEditingLabel, onConfirmCreateEditLabel, deleteLabel }) => {
   
-	const isCreatingNewLabel = (!creatingEditingLabel || creatingEditingLabel?.id === 'TEMP_ID');
+	const isCreatingNewLabel = (creatingEditingLabel?.id === 'TEMP_ID');
 
 	const handleInputChange = (e, inputId) => {
 		let newFormValues = _.cloneDeep(formValues);
@@ -25,8 +25,10 @@ const CreateEditLabelModal = ({ creatingEditingLabel, setCreatingEditingLabel, o
 		if (isCreatingNewLabel) {
 			deleteLabel('TEMP_ID');
 		}
-		setCreatingEditingLabel(null);
-		cleanupForm();
+		if (creatingEditingLabel) {
+			setCreatingEditingLabel(null);
+			cleanupForm();
+		}
 	}
 
 	const cleanupForm = () => {

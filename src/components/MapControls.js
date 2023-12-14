@@ -30,7 +30,6 @@ const MapControls = ({
 
 	useEffect(() => {
 		mapSearchInputRef?.current?.focus();
-		console.log('testtest');
 	}, [isSearchCardExpanded])
 
 	const handleSearchChange = event => {
