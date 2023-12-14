@@ -37,6 +37,10 @@ import { ReactComponent as CogIcon} from './cog.svg';
 import { ReactComponent as LinkIcon} from './link.svg';
 import { ReactComponent as AdjustmentsHorizontalIcon} from './adjustmentshorizontal.svg';
 import { ReactComponent as ArrowsPointingOutMiniIcon} from './arrowspointoutmini.svg';
+import { ReactComponent as ZoomInIcon} from './zoomin.svg';
+import { ReactComponent as ZoomOutIcon} from './zoomout.svg';
+import { ReactComponent as BookmarkIcon} from './bookmark.svg';
+import { ReactComponent as FunnelIcon} from './funnel.svg';
 
 export {
 	ButtonsIcon,
@@ -78,4 +82,8 @@ export {
 	LinkIcon,
 	AdjustmentsHorizontalIcon,
 	ArrowsPointingOutMiniIcon,
+	ZoomInIcon,
+	ZoomOutIcon,
+	BookmarkIcon,
+	FunnelIcon,
 }

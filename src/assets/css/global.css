@@ -331,9 +331,8 @@ div.react-switch-selector-option {
 	position: relative;
 }
 
-.search-togle-card {
+.search-togglecard {
 	min-width: 82px;
-
 }
 
 .map-search-control-container input {
@@ -344,9 +343,7 @@ div.react-switch-selector-option {
 	min-height: 82px;
 }
 
-
 .map-search-control > div {
-	overflow: visible;
 	min-width: 300px;
 	color: gray;
 }
@@ -358,6 +355,7 @@ div.react-switch-selector-option {
 	}
 	.map-search-control > div {
 		min-width: 400px;
+		outline: 1px solid #ffffff38;
 	}
 }
 
@@ -365,15 +363,6 @@ div.react-switch-selector-option {
 	padding: 0!important;
 }
 
-.icon-select__input-container,
-.icon-select__placeholder {
-	font-size: 32px;
-}
-
-.icon-select-container {
-	padding: 0.5rem;
-}
-
-.icon-select__input {
-	width: unset!important;
+.map-search-results-container > div:not(:first-child) {
+	border-top: 1px solid #4c4f52;
 }
