@@ -41,6 +41,8 @@ import { ReactComponent as ZoomInIcon} from './zoomin.svg';
 import { ReactComponent as ZoomOutIcon} from './zoomout.svg';
 import { ReactComponent as BookmarkIcon} from './bookmark.svg';
 import { ReactComponent as FunnelIcon} from './funnel.svg';
+import { ReactComponent as DownloadIcon} from './download.svg';
+import { ReactComponent as UploadIcon} from './upload.svg';
 
 export {
 	ButtonsIcon,
@@ -86,4 +88,6 @@ export {
 	ZoomOutIcon,
 	BookmarkIcon,
 	FunnelIcon,
+	DownloadIcon,
+	UploadIcon,
 }

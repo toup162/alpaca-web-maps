@@ -57,7 +57,6 @@ const MapControls = ({
 		closeAndClearSearchCard();
 	}
 
-	console.log(activeClickListener);
 
 	return (
 		

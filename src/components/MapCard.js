@@ -2,7 +2,7 @@ import { Button, Card, CardBody } from '@windmill/react-ui';
 import React, { useState } from 'react';
 import { ReactFitty } from 'react-fitty';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
-import { EllipsisIcon, CogIcon, TrashMiniIcon } from '../icons';
+import { EllipsisIcon, CogIcon, TrashMiniIcon, DownloadIcon } from '../icons';
 import moment from 'moment';
 import { Tooltip } from 'react-tippy';
 
@@ -27,11 +27,27 @@ const MapCard = ({mapDetails, setConfirmDeleteMapModalOpen}) => {
 		setOptionsTooltipIsOpen(false);
 	}
 
+	const exportAndDownloadMapJson = () => {
+		if (mapDetails) {
+			const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(mapDetails));
+			let downloadAnchorNode = document.createElement('a');
+			downloadAnchorNode.setAttribute("href", dataStr);
+			downloadAnchorNode.setAttribute("download", `${mapDetails.mapName ? mapDetails.mapName.toLowerCase().replace(' ', '_') : 'unnamed_map'}.json`);
+			document.body.appendChild(downloadAnchorNode);
+			downloadAnchorNode.click();
+			downloadAnchorNode.remove();
+		}
+	}
+
 	const optionsTooltipContent = (
 		<div className='options-tooltip-content-container'>
 			<div className="tooltip-option flex text-neutral-200" onClick={handleEditMapClick}>
 				<CogIcon />
 				<div className='ml-2'>Edit Metadata</div>
+			</div>
+			<div className="tooltip-option flex text-neutral-200" onClick={exportAndDownloadMapJson}>
+				<DownloadIcon className='h-5 w-5' />
+				<div className='ml-2'>Export Map</div>
 			</div>
 			<div className="tooltip-option flex text-red-400" onClick={handleDeleteMapClick}>
 				<TrashMiniIcon />

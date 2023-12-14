@@ -90,7 +90,6 @@ const MapViewer = () => {
 				
 			}}
 		)
-console.log('mapControlHandler');
 		return <div />;
 	}
 

@@ -24,44 +24,11 @@ export const UserLocalProvider = ({ children }) => {
 		})
 	});
 
-	const [userLocal, setUserLocal] = useState(parsedUserLocal ? parsedUserLocal : {
-    maps: [
-			{
-				mapName: "Map Name",
-				tileRootDirectoryUrl: "https://raw.githubusercontent.com/toup162/alpaca-web-maps/master/public/placeholder_map",
-				mapAttribution: "111",
-				createdTs: "2023-12-07T06:15:52.510Z",
-				modifiedTs: "2023-12-07T06:22:45.476Z",
-				mapId: "8zwl-kEi1GqFZHnIcZYm9",
-				centerXCoord: '60',
-				centerYCoord: '-20',
-				initialZoom: '2',
-				minZoom: '2',
-				maxZoom: '6',
-				tileDirectorySchema: '/{z}/{y}/{x}.png'
-			},
-			{
-				mapName: "Test OSM",
-				tileRootDirectoryUrl: "https://tile.osm.org",
-				mapAttribution: "a",
-				createdTs: "2023-12-07T07:03:35.249Z",
-				modifiedTs: "2023-12-07T07:03:35.249Z",
-				mapId: "QnfGogwN0jKYk9EeEaGsL",
-				centerXCoord: '37.56',
-				centerYCoord: '-95.16',
-				initialZoom: '5',
-				minZoom: '2',
-				maxZoom: '13',
-				tileDirectorySchema: '/{z}/{x}/{y}.png'
-			}
-    ]
-	})
+	const [userLocal, setUserLocal] = useState(parsedUserLocal ? parsedUserLocal : {maps: null})
 
-/*
-	const [userLocal, setUserLocal] = useState({
-		maps: null,
-	})
-*/
+	const initializeUserLocal = () => {
+		setUserLocal({maps: []});
+	}
 
 	const initFromLocalStorage = () => {
 		const stringifiedUserLocal = localStorage.getItem('ALPACA_WEB_MAPS_USER_LOCAL');
@@ -117,6 +84,7 @@ export const UserLocalProvider = ({ children }) => {
 			deleteMap,
 			updateMap,
 			setMarkersByMapId,
+			initializeUserLocal
 		}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[userLocal]
