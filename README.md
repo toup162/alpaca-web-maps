@@ -16,7 +16,8 @@ ______
  - <i>(optional)</i> Add map meta-information such as a default view, maximum/minimum allowed zoom, etc.
  - Add Markers and Labels using the Editor tool
     - <i>(optional)</i> Utilize Markers to create connectiones between multiple maps to allow for seemless transitioning
- - Share permanent links with anyone to navigate directly to particular markers and labels on your map!
+ - Share permanent links with anyone to navigate directly to particular markers and labels on your map
+ - Use the search tool to quickly find markers - panning and zooming directly to them
 
 ______
 
