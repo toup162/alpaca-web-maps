@@ -1,6 +1,40 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![image](https://github.com/toup162/alpaca-web-maps/assets/11641649/204993f9-ac1c-45c8-b997-52dfc1f8032a)
+
+______
+
+### Create and share rich, interactive maps
+ ... for your favorite old-school RPG
+ <br/>
+ ... for your D&D campaign
+ <br/>
+ ... for an office floor plan
+ <br/>
+
+### Steps to get started
+ - Upload your map image files or reference them externally
+ - <i>(optional)</i> Add map meta-information such as a default view, maximum/minimum allowed zoom, etc.
+ - Add Markers and Labels using the Editor tool
+    - <i>(optional)</i> Utilize Markers to create connectiones between multiple maps to allow for seemless transitioning
+ - Share permanent links with anyone to navigate directly to particular markers and labels on your map
+ - Use the search tool to quickly find markers - panning and zooming directly to them
+
+______
+
+### Screens
+
+![image](https://github.com/toup162/alpaca-web-maps/assets/11641649/c25ba43f-8fae-47fe-b04f-9048526dccb6)
+
+![image](https://github.com/toup162/alpaca-web-maps/assets/11641649/376a17b5-290e-49f5-93e9-43e92d9d9257)
+
+![image](https://github.com/toup162/alpaca-web-maps/assets/11641649/08bb8f5f-00bb-43d4-a71e-8188edbcf3a4)
+
+![image](https://github.com/toup162/alpaca-web-maps/assets/11641649/c0ce7bde-bc30-4ddd-ba2a-27e2c16d6d0d)
+
+![image](https://github.com/toup162/alpaca-web-maps/assets/11641649/ad4836ca-7d53-408b-b9b0-839cfcb83512)
+
+
+______
 
 ## Available Scripts
 
@@ -28,43 +62,3 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
